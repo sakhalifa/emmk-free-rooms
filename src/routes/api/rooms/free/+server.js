@@ -1,6 +1,6 @@
 import { checkError } from '$lib/server/utils';
 import { json } from '@sveltejs/kit';
-import { getTest } from '$lib/server/roomStore';
+import { getRooms } from '$lib/server/roomStore';
 /**
  * @type {import('$lib/server/types.d').ParamType[]}
  */
@@ -14,10 +14,11 @@ const params = [
 ];
 
 /** @type {import('./$types').RequestHandler} */
-export function GET({ url }) {
-	let [errorOccured, value] = checkError(url, params)
+export async function GET({ url }) {
+	let [errorOccured, value] = checkError(url.searchParams, params)
 	if (errorOccured)
 		return json(value);
-	return json({value: getTest()})
+	
+	return json({rooms: await getRooms()})
 	
 }

@@ -8,12 +8,15 @@ function removePrivateParameters(obj) {
 }
 
 /**
- * 
- * @param {URL} url 
- * @param {import("./types.d").ParamType[]} params
+ * A function that will check for errors in the url search parameters compared to a 
+ * params array. Will return [true, errors] if an error occured, else [false, parsed_parameters]
+ * where `parsed_parameters` is a dictionary with {params.name: params._parse(params.value)}
+ * @param {{get: (key: string) => string | null}} searchParams Equivalent of a Map<string, string>
+ * @param {import("./types.d").ParamType[]} params An array that says what and how searchParameters should
+ * be processed
  * @return {[boolean, any]}
  */
-function checkError(url, params) {
+function checkError(searchParams, params) {
 	const paramRet = removePrivateParameters(params)
 	/** @type any */
 	let parsedParams = {}
@@ -27,7 +30,7 @@ function checkError(url, params) {
 		return { status: status, error: errMsg, params: paramRet }
 	}
 	for (const param of params) {
-		let p = url.searchParams.get(param.name);
+		let p = searchParams.get(param.name);
 		if (!p)
 			if (param.required)
 				return [
@@ -77,7 +80,7 @@ function checkError(url, params) {
 		}
 		parsedParams[param.name] = parsedParam
 	}
-	return [true, parsedParams]
+	return [false, parsedParams]
 }
 
 export { removePrivateParameters, checkError };
