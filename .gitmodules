@@ -1,0 +1,3 @@
+[submodule "src/lib/server/ADE-client"]
+	path = src/lib/server/ADE-client
+	url = https://github.com/sakhalifa/ADE-client.git
