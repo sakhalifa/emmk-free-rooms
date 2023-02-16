@@ -11,10 +11,60 @@ function removePrivateParameters(obj) {
  * 
  * @param {Date} timestamp 
  */
-function convertDateToISODay(timestamp){
+function convertDateToISODay(timestamp) {
 	return timestamp.toISOString().split('T')[0]
 }
 
+
+/**
+ * 
+ * @param {number} hour 
+ * @param {number} min 
+ * @param {number} day 
+ */
+function newDate(hour, min, day) {
+	const d = new Date("2023-02-20")
+	var currentDay = d.getDay();
+	var distance = day - currentDay;
+	d.setDate(d.getDate() + distance);
+	d.setHours(hour, min)
+	return d
+}
+
+/**
+ * 
+ * @param {Date} date 
+ */
+function getMonday(date) {
+	let d = new Date(date);
+	var day = d.getDay()
+	var diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+	d.setDate(diff)
+	return d;
+}
+
+/**
+ * 
+ * @param {string} str 
+ */
+function parseRegex(str) {
+	try {
+		return new RegExp(str)
+	} catch (e) {
+		return undefined
+	}
+}
+
+/**
+ * 
+ * @param {Date} date
+ */
+function getSaturday(date) {
+	let d = new Date(date)
+	var lastday = d.getDate() - (d.getDay() - 1) + 5;
+	d.setDate(lastday)
+	return d;
+}
 /**
  * A function that will check for errors in the url search parameters compared to a 
  * params array. Will return [true, errors] if an error occured, else [false, parsed_parameters]
@@ -91,4 +141,4 @@ function checkError(searchParams, params) {
 	return [false, parsedParams]
 }
 
-export { removePrivateParameters, checkError, convertDateToISODay };
+export { removePrivateParameters, checkError, convertDateToISODay, newDate, getMonday, getSaturday, parseRegex };

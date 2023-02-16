@@ -1,3 +1,4 @@
+import type { CalendarResponse } from "node-ical";
 
 
 type ParamType = {
@@ -20,4 +21,30 @@ type ParamType = {
 	/** */
 };
 
-export type { ParamType };
+type PlanningEvent = {
+	summary: string;
+	start: Date;
+	end: Date;
+}
+
+
+class PlanningOfWeek {
+	public events: PlanningEvent[][]
+	constructor(events: CalendarResponse){
+		this.events = [[], [], [], [], [], []]
+		for(const ev of Object.values(events)){
+			if(ev.type === "VEVENT"){
+				const day = ev.start.getDay() - 1
+				this.events[day].push({
+					summary: ev.summary,
+					start: new Date(ev.start),
+					end: new Date(ev.end)
+				})
+			}
+
+		}
+	}
+}
+
+export type { ParamType, PlanningEvent};
+export {PlanningOfWeek}

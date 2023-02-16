@@ -1,18 +1,8 @@
-import { checkError } from '$lib/server/utils';
+import { checkError, parseRegex } from '$lib/server/utils';
 import { getRooms } from '$lib/server/roomStore';
 import { json } from '@sveltejs/kit';
 
-/**
- * 
- * @param {string} str 
- */
-function parseRegex(str){
-	try{
-		return new RegExp(str)
-	}catch(e){
-		return undefined
-	}
-}
+
 
 /**
  * @type {import('$lib/server/types.d').ParamType[]}
