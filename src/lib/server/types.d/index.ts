@@ -1,4 +1,4 @@
-import type { Type } from "typescript";
+
 
 type ParamType = {
 	/**The name of the paramter */
