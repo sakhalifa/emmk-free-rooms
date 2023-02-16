@@ -54,7 +54,6 @@ async function getPlanningForRoom(room, start, end) {
 		`${room.id}:${convertDateToISODay(start)}:${convertDateToISODay(end)}`,
 		MS_IN_SEC * SEC_IN_MIN * MIN_IN_HOUR * 5, //ttl of 5h
 		async (key) => {
-			console.log("cache miss :flushed:")
 			const [id, startStr, endStr] = key.split(":")
 			const client = createClient()
 			const start = new Date(startStr)
