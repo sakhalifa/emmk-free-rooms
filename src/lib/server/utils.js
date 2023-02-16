@@ -23,7 +23,7 @@ function convertDateToISODay(timestamp) {
  * @param {number} day 
  */
 function newDate(hour, min, day) {
-	const d = new Date("2023-02-20")
+	const d = new Date()
 	var currentDay = d.getDay();
 	var distance = day - currentDay;
 	d.setDate(d.getDate() + distance);
