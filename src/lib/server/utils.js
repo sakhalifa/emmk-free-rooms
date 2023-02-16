@@ -1,10 +1,18 @@
 /**
- * 
+ * Returns a new copy of `obj` without properties that start with an '_'
  * @param {any[]} obj 
  * @returns {any}
  */
 function removePrivateParameters(obj) {
 	return obj.map((o) => Object.fromEntries(Object.entries(o).filter(([key]) => !key.startsWith('_'))));
+}
+
+/**
+ * 
+ * @param {Date} timestamp 
+ */
+function convertDateToISODay(timestamp){
+	return timestamp.toISOString().split('T')[0]
 }
 
 /**
@@ -83,4 +91,4 @@ function checkError(searchParams, params) {
 	return [false, parsedParams]
 }
 
-export { removePrivateParameters, checkError };
+export { removePrivateParameters, checkError, convertDateToISODay };

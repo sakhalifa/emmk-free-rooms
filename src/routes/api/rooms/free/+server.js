@@ -1,6 +1,7 @@
 import { checkError } from '$lib/server/utils';
-import { json } from '@sveltejs/kit';
-import { getRooms } from '$lib/server/roomStore';
+import { error, json } from '@sveltejs/kit';
+import { getPlanningForRoom, getRooms } from '$lib/server/roomStore';
+
 /**
  * @type {import('$lib/server/types.d').ParamType[]}
  */
@@ -19,6 +20,10 @@ export async function GET({ url }) {
 	if (errorOccured)
 		return json(value);
 	
-	return json({rooms: await getRooms()})
+
+	const room = (await getRooms()).find((r) => r.name.includes("I101"))
+	if(room === undefined)
+		throw error(500)
+	return json({"test": await getPlanningForRoom(room, new Date("2023-02-20"), new Date("2023-02-20"))})
 	
 }
