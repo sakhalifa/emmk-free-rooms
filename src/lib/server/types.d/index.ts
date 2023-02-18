@@ -28,14 +28,16 @@ type PlanningEvent = {
 }
 
 
-class PlanningOfWeek {
-	public events: PlanningEvent[][]
+class PlanningOfDay {
+	/**
+	 * All the events. They ARE NOT ORDERED!
+	 */
+	public events: PlanningEvent[]
 	constructor(events: CalendarResponse){
-		this.events = [[], [], [], [], [], []]
+		this.events = []
 		for(const ev of Object.values(events)){
 			if(ev.type === "VEVENT"){
-				const day = ev.start.getDay() - 1
-				this.events[day].push({
+				this.events.push({
 					summary: ev.summary,
 					start: new Date(ev.start),
 					end: new Date(ev.end)
@@ -47,4 +49,4 @@ class PlanningOfWeek {
 }
 
 export type { ParamType, PlanningEvent};
-export {PlanningOfWeek}
+export {PlanningOfDay}

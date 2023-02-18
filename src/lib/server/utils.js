@@ -65,6 +65,20 @@ function getSaturday(date) {
 	d.setDate(lastday)
 	return d;
 }
+
+/**
+ * 
+ * @param {Date} start 
+ * @param {Date} end 
+ * @returns {Date[]}
+ */
+function getDaysArray(start, end) {
+	for (var arr = [], dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1)) {
+		arr.push(new Date(dt));
+	}
+	return arr;
+};
+
 /**
  * A function that will check for errors in the url search parameters compared to a 
  * params array. Will return [true, errors] if an error occured, else [false, parsed_parameters]
@@ -141,4 +155,4 @@ function checkError(searchParams, params) {
 	return [false, parsedParams]
 }
 
-export { removePrivateParameters, checkError, convertDateToISODay, newDate, getMonday, getSaturday, parseRegex };
+export { removePrivateParameters, checkError, convertDateToISODay, newDate, getMonday, getSaturday, parseRegex, getDaysArray };
