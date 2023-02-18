@@ -45,14 +45,14 @@ async function getRooms() {
  * @param {import('./ADE-client').Room} room 
  * @param {Date} start
  * @param {Date} end
- * @returns 
+ * @returns {Promise<PlanningOfDay[]>}
  */
 async function getPlanningForRoom(room, start, end) {
 	const MS_IN_SEC = 1000
 	const SEC_IN_MIN = 60
 	const MIN_IN_HOUR = 60
 	const daysArray = getDaysArray(start, end)
-	/**@type {Promise<any>[]} */
+	/**@type {Promise<PlanningOfDay>[]} */
 	const promises = []
 	for(const day of daysArray){
 		if(day.getDay() === 0)

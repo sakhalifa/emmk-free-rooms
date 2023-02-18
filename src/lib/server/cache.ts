@@ -41,7 +41,7 @@ async function _update(key: string) {
  * @param ttl TTL in ms
  * @param fetcher function used to fetch new data from key
  */
-async function getOrRevalidate(key: string, ttl: number = 600 * 1000, fetcher?: (key: string) => Promise<any>) {
+async function getOrRevalidate<T>(key: string, ttl: number = 600 * 1000, fetcher?: (key: string) => Promise<T>): Promise<T> {
 	if (cache.get(key) === undefined) {
 		const value: CacheElement = {
 			fetcher: fetcher ? fetcher : (key) => fetch(key).then((r) => r.json()),
@@ -55,7 +55,7 @@ async function getOrRevalidate(key: string, ttl: number = 600 * 1000, fetcher?: 
 	if (_isExpired(value))
 		_update(key)
 	if (value.isFetching)
-		await waitUntil(() => !value.isFetching)
+		await waitUntil(() => !value.isFetching, {timeout: 10000})
 	return value.data
 }
 

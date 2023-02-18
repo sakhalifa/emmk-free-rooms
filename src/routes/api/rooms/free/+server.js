@@ -1,7 +1,6 @@
-import { checkError, getMonday, getSaturday, parseRegex } from '$lib/server/utils';
+import { checkError, parseRegex } from '$lib/server/utils';
 import { error, json } from '@sveltejs/kit';
 import { getPlanningForRoom, getRooms } from '$lib/server/roomStore';
-import { PlanningOfWeek } from '$lib/server/types.d';
 import { newDate } from '$lib/server/utils';
 
 /**
@@ -28,28 +27,25 @@ const params = [
  * @returns {Promise<Response>} 
  */
 async function getFreeRooms(startHour, startMin, endHour, endMin, day, rooms) {
-	const start = newDate(startHour, startMin, day+1)
-	const end = newDate(endHour, endMin, day+1)
-
-	const monday = getMonday(start)
-	const saturday = getSaturday(start)
+	const dayDate = newDate(startHour, startMin, day+1)
 	/**
-	 * @type {{[key: string]: import('$lib/server/types.d').PlanningOfWeek}}
+	 * @type {Map<string, import('$lib/server/types.d').PlanningOfDay[]>}
 	 */
-	const roomPlannings = {}
+	const roomPlannings = new Map()
 	const myR = rooms.find(r => r.name.includes("I107"))
 	for (const r of rooms) {
-		if (r === myR) {
-			console.log(r.name)
-			console.log(monday)
-			console.log(saturday)
-		}
-		roomPlannings[r.id] = new PlanningOfWeek(await getPlanningForRoom(r, monday, saturday))
+		console.log(`fetching ${r.name}`)
+		if(roomPlannings.get(r.id) === undefined)
+			roomPlannings.set(r.id, [])
+			
+		// @ts-ignore
+		roomPlannings.get(r.id).push((await getPlanningForRoom(r, dayDate, dayDate))[0])
 	}
+	console.log("success!!")
 	if (myR === undefined)
 		throw error(500)
 
-	return json(roomPlannings[myR.id])
+	return json(roomPlannings.get(myR.id))
 
 }
 
@@ -71,9 +67,9 @@ export async function GET({ url }) {
 	const rooms = (await getRooms()).filter((r) => searchRegex ? searchRegex.test(r.name) : true)
 	return (await getFreeRooms(startHour, startMin, endHour, endMin, day, rooms))
 
-
-	const r = (await getRooms()).find((r) => r.name.includes("I101"))
-	if (r === undefined)
-		throw error(500)
-	return json(await getPlanningForRoom(r, new Date("2023-02-20"), new Date("2023-02-20")))
+	
+	// const r = (await getRooms()).find((r) => r.name.includes("I101"))
+	// if (r === undefined)
+	// 	throw error(500)
+	// return json(await getPlanningForRoom(r, new Date("2023-02-20"), new Date("2023-02-27")))
 }
