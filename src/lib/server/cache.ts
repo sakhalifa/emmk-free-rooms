@@ -1,9 +1,15 @@
 import waitUntil from "async-wait-until"
 import { CLEAN_TIMER } from "$env/static/private"
 
+type FetcherOptions = {
+	key: string;
+	/** The function to force delete the key from cache */
+	remove: (k: string) => boolean;
+}
+
 type CacheElement = {
 	data?: any,
-	fetcher: (key: string) => Promise<any>,
+	fetcher: (options: FetcherOptions) => Promise<any>,
 	isFetching: boolean,
 	lastUpdate: number,
 	ttl: number
@@ -29,7 +35,7 @@ function _isExpired(el: CacheElement) {
 async function _update(key: string) {
 	const value = cache.get(key)!
 	value.isFetching = true
-	let data = await value.fetcher(key)
+	let data = await value.fetcher({key: key, remove: cache.delete})
 	value.isFetching = false
 	value.data = data
 	value.lastUpdate = Date.now()
@@ -41,21 +47,20 @@ async function _update(key: string) {
  * @param ttl TTL in ms
  * @param fetcher function used to fetch new data from key
  */
-async function getOrRevalidate<T>(key: string, ttl: number = 600 * 1000, fetcher?: (key: string) => Promise<T>): Promise<T> {
+async function getOrRevalidate<T>(key: string, ttl: number = 600 * 1000, fetcher?: (options: FetcherOptions) => Promise<T>): Promise<T> {
 	if (cache.get(key) === undefined) {
 		const value: CacheElement = {
-			fetcher: fetcher ? fetcher : (key) => fetch(key).then((r) => r.json()),
+			fetcher: fetcher ? fetcher : ({key: key}) => fetch(key).then((r) => r.json()),
 			isFetching: false,
 			lastUpdate: 0,
 			ttl: ttl,
 		}
 		cache.set(key, value);
+		await _update(key)
 	}
 	const value = cache.get(key)!
 	if (_isExpired(value))
-		_update(key)
-	if (value.isFetching)
-		await waitUntil(() => !value.isFetching, {timeout: 10000})
+		await _update(key)
 	return value.data
 }
 

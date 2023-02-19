@@ -62,7 +62,7 @@ function getMonday(date) {
  * 
  * @param {string} str 
  */
-function parseRegex(str) {
+async function parseRegex(str) {
 	try {
 		return new RegExp(str)
 	} catch (e) {
@@ -101,9 +101,9 @@ function getDaysArray(start, end) {
  * @param {{get: (key: string) => string | null}} searchParams Equivalent of a Map<string, string>
  * @param {import("./types.d").ParamType[]} params An array that says what and how searchParameters should
  * be processed
- * @return {[boolean, any]}
+ * @return {Promise<[boolean, any]>}
  */
-function checkError(searchParams, params) {
+async function checkError(searchParams, params) {
 	const paramRet = removePrivateParameters(params)
 	/** @type any */
 	let parsedParams = {}
@@ -129,8 +129,8 @@ function checkError(searchParams, params) {
 			else
 				continue;
 		/** @type any */
-		let parsedParam = param._parser(p)
-		if (!param._checkFunction(parsedParam))
+		let parsedParam = await param._parser(p)
+		if (!(await param._checkFunction(parsedParam)))
 			return [
 				true,
 				error(

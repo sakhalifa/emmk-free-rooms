@@ -8,13 +8,13 @@ import { json } from '@sveltejs/kit';
  * @type {import('$lib/server/types.d').ParamType[]}
  */
 const params = [
-	{ name: 'searchRegex', required: true, type: 'string', _parser: parseRegex, _checkFunction: (r) => (typeof(r) === "object")},
+	{ name: 'searchRegex', required: true, type: 'string', _parser: parseRegex, _checkFunction: async (r) => (typeof(r) === "object")},
 
 ];
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({url}){
-	let [errorOccured, value] = checkError(url.searchParams, params)
+	let [errorOccured, value] = await checkError(url.searchParams, params)
 	if (errorOccured)
 		return json(value, {status: 400});
 

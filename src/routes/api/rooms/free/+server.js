@@ -7,12 +7,12 @@ import { setDayOfWeek } from '$lib/server/utils';
  * @type {import('$lib/server/types.d').ParamType[]}
  */
 const params = [
-	{ name: 'startHour', required: true, type: 'int', min: 0, max: 60, _parser: Number, _checkFunction: Number.isInteger },
-	{ name: 'startMin', required: true, type: 'int', min: 0, max: 60, _parser: Number, _checkFunction: Number.isInteger },
-	{ name: 'endHour', required: true, type: 'int', min: 0, max: 60, _parser: Number, _checkFunction: Number.isInteger },
-	{ name: 'endMin', required: true, type: 'int', min: 0, max: 60, _parser: Number, _checkFunction: Number.isInteger },
-	{ name: 'day', required: false, type: 'int', min: 0, max: 6, _parser: Number, _checkFunction: Number.isInteger },
-	{ name: 'searchRegex', required: false, type: 'string', _parser: parseRegex, _checkFunction: (r) => (typeof (r) === "object") },
+	{ name: 'startHour', required: true, type: 'int', min: 0, max: 60, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n) },
+	{ name: 'startMin', required: true, type: 'int', min: 0, max: 60, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n) },
+	{ name: 'endHour', required: true, type: 'int', min: 0, max: 60, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n) },
+	{ name: 'endMin', required: true, type: 'int', min: 0, max: 60, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n) },
+	{ name: 'day', required: false, type: 'int', min: 0, max: 6, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n) },
+	{ name: 'searchRegex', required: false, type: 'string', _parser: parseRegex, _checkFunction: async (r) => (typeof (r) === "object") },
 
 ];
 
@@ -66,7 +66,7 @@ async function getFreeRooms(startHour, startMin, endHour, endMin, refDate, rooms
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }) {
-	let [errorOccured, value] = checkError(url.searchParams, params)
+	let [errorOccured, value] = await checkError(url.searchParams, params)
 	if (errorOccured)
 		return json(value, { status: 400 });
 
@@ -81,7 +81,7 @@ export async function GET({ url }) {
 		day = new Date().getDay()
 	else
 		day += 1
-	
+
 	const rooms = (await getRooms()).filter((r) => searchRegex ? searchRegex.test(r.name) : true)
 	return await getFreeRooms(startHour, startMin, endHour, endMin, setDayOfWeek(day, new Date("2023-02-20")), rooms)
 
