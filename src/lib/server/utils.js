@@ -17,18 +17,33 @@ function convertDateToISODay(timestamp) {
 
 
 /**
- * 
- * @param {number} hour 
- * @param {number} min 
+ * Returns a new Date with the day of week between 0 and 6
+ * 0 being sunday and 6 being saturday
  * @param {number} day 
+ * @param {Date} ref
  */
-function newDate(hour, min, day) {
-	const d = new Date()
+function setDayOfWeek(day, ref) {
+	const d = new Date(ref)
 	var currentDay = d.getDay();
 	var distance = day - currentDay;
 	d.setDate(d.getDate() + distance);
-	d.setHours(hour, min)
 	return d
+}
+
+/**
+ * Returns if two date ranges overlap.
+ * It will not count an overlap if b ends when a start or inversely.
+ * @param {Date} a_start 
+ * @param {Date} a_end 
+ * @param {Date} b_start 
+ * @param {Date} b_end 
+ * @returns 
+ */
+function dateRangeOverlaps(a_start, a_end, b_start, b_end) {
+	if (a_start < b_start && b_start < a_end) return true; // b starts in a
+	if (a_start < b_end && b_end < a_end) return true; // b ends in a
+	if (b_start < a_start && a_end < b_end) return true; // a in b
+	return false;
 }
 
 /**
@@ -155,4 +170,4 @@ function checkError(searchParams, params) {
 	return [false, parsedParams]
 }
 
-export { removePrivateParameters, checkError, convertDateToISODay, newDate, getMonday, getSaturday, parseRegex, getDaysArray };
+export { removePrivateParameters, checkError, convertDateToISODay, setDayOfWeek, getMonday, getSaturday, parseRegex, getDaysArray, dateRangeOverlaps };
