@@ -13,7 +13,7 @@ let users = new Map()
  * @returns {Promise<import("./types.d").User | null>} returns a user object if it's a valid login, else null.
  */
 async function getOrCreateUser(login) {
-	if (users.has(login)){
+	if (users.has(login)) {
 		const val = users.get(login)
 		return val ?? null // Only to remove warning...
 	}
@@ -23,7 +23,7 @@ async function getOrCreateUser(login) {
 	await c.initProject();
 	try {
 		const val = { id: (await c.getADEId(login)) }
-		if(!val?.id)
+		if (!val?.id)
 			return null // Return null if the id is 0.
 		users.set(login, val)
 		return val
@@ -40,25 +40,27 @@ async function getOrCreateUser(login) {
  * @param {Date} end 
  */
 async function getPlanningForUser(user, start, end) {
-	/** @type {import("./types.d").PlanningOfDay[]} */
-	const plannings = []
+	/** @type {Promise<import("./types.d").PlanningOfDay>[]} */
+	const promises = []
 
 	const days = getDaysArray(start, end)
-	for(const day of days){
-		const planning = await getOrRevalidate(
+	for (const day of days) {
+		if (day.getDay() === 0)
+			continue;
+		const planning = getOrRevalidate(
 			`${user.id}:${convertDateToISODay(day)}`,
 			1000 * 60 * 60,
-			async ({key}) => {
+			async ({ key }) => {
 				const [id, dayStr] = key.split(":")
 				const date = new Date(dayStr)
 				let c = createClient()
 				return new PlanningOfDay(await c.getPlanningForResource(id, date, date))
 			}
 		)
-		plannings.push(planning)
+		promises.push(planning)
 	}
 
-	return plannings
+	return (await Promise.all(promises))
 }
 
 export { getOrCreateUser, getPlanningForUser }

@@ -23,6 +23,7 @@ type ParamType = {
 };
 
 type PlanningEvent = {
+	location: string;
 	summary: string;
 	start: Date;
 	end: Date;
@@ -42,8 +43,9 @@ class PlanningOfDay {
 		this.events = []
 		for(const ev of Object.values(events)){
 			if(ev.type === "VEVENT"){
-				this.events.push({
+				this.events.unshift({
 					summary: ev.summary,
+					location: ev.location,
 					start: new Date(ev.start),
 					end: new Date(ev.end)
 				})
