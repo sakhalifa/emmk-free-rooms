@@ -83,6 +83,15 @@ function getSaturday(date) {
 
 /**
  * 
+ * @param {Date} date 
+ * @returns {boolean}
+ */
+function isValidDate(date) {
+	return date.toString() !== 'Invalid Date'
+}
+
+/**
+ * 
  * @param {Date} start 
  * @param {Date} end 
  * @returns {Date[]}
@@ -135,7 +144,7 @@ async function checkError(searchParams, params) {
 				true,
 				error(
 					"INVALID PARAMETER",
-					`Failed to parse the parameter '${param.name}'! Should be of type ${param.type}`,
+					`Failed to parse the parameter '${param.name}'!: "${param._parseFailMessage}"`
 				)]
 
 		if (param.min !== undefined && parsedParam < param.min)
@@ -170,4 +179,4 @@ async function checkError(searchParams, params) {
 	return [false, parsedParams]
 }
 
-export { removePrivateParameters, checkError, convertDateToISODay, setDayOfWeek, getMonday, getSaturday, parseRegex, getDaysArray, dateRangeOverlaps };
+export { removePrivateParameters, checkError, convertDateToISODay, setDayOfWeek, getMonday, getSaturday, parseRegex, getDaysArray, dateRangeOverlaps, isValidDate };

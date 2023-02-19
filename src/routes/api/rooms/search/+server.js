@@ -8,7 +8,7 @@ import { json } from '@sveltejs/kit';
  * @type {import('$lib/server/types.d').ParamType[]}
  */
 const params = [
-	{ name: 'searchRegex', required: true, type: 'string', _parser: parseRegex, _checkFunction: async (r) => (typeof(r) === "object")},
+	{ name: 'searchRegex', required: false, type: 'regex', _parser: parseRegex, _checkFunction: async (r) => (typeof (r) === "object"), _parseFailMessage: "Not a valid regex!"},
 
 ];
 

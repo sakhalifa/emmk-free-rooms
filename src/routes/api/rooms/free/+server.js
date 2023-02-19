@@ -7,12 +7,12 @@ import { setDayOfWeek } from '$lib/server/utils';
  * @type {import('$lib/server/types.d').ParamType[]}
  */
 const params = [
-	{ name: 'startHour', required: true, type: 'int', min: 0, max: 60, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n) },
-	{ name: 'startMin', required: true, type: 'int', min: 0, max: 60, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n) },
-	{ name: 'endHour', required: true, type: 'int', min: 0, max: 60, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n) },
-	{ name: 'endMin', required: true, type: 'int', min: 0, max: 60, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n) },
-	{ name: 'day', required: false, type: 'int', min: 0, max: 6, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n) },
-	{ name: 'searchRegex', required: false, type: 'string', _parser: parseRegex, _checkFunction: async (r) => (typeof (r) === "object") },
+	{ name: 'startHour', required: true, type: 'int', min: 0, max: 60, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n), _parseFailMessage: "Not a valid integer!" },
+	{ name: 'startMin', required: true, type: 'int', min: 0, max: 60, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n), _parseFailMessage: "Not a valid integer!"},
+	{ name: 'endHour', required: true, type: 'int', min: 0, max: 60, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n), _parseFailMessage: "Not a valid integer!"},
+	{ name: 'endMin', required: true, type: 'int', min: 0, max: 60, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n), _parseFailMessage: "Not a valid integer!"},
+	{ name: 'day', required: false, type: 'int', min: 0, max: 6, _parser: async (n) => Number(n), _checkFunction: async (n) => Number.isInteger(n), _parseFailMessage: "Not a valid integer!"},
+	{ name: 'searchRegex', required: false, type: 'regex', _parser: parseRegex, _checkFunction: async (r) => (typeof (r) === "object"), _parseFailMessage: "Not a valid regex!"},
 
 ];
 

@@ -18,13 +18,18 @@ type ParamType = {
 	_parser: (_: string) => Promise<unknown>;
 	/**Returns true iif the parameter has been correctly parsed */
 	_checkFunction: (_: unknown) => Promise<boolean>;
-	/** */
+	/**The message shown if the parsing failed*/
+	_parseFailMessage: string
 };
 
 type PlanningEvent = {
 	summary: string;
 	start: Date;
 	end: Date;
+}
+
+type User = {
+	id: number
 }
 
 
@@ -48,5 +53,5 @@ class PlanningOfDay {
 	}
 }
 
-export type { ParamType, PlanningEvent};
+export type { ParamType, PlanningEvent, User};
 export {PlanningOfDay}
