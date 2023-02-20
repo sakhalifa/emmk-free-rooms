@@ -6,8 +6,6 @@ WORKDIR /home
 
 RUN npm install
 
-RUN ls
-
 RUN npm run build
 
 RUN rm .env
