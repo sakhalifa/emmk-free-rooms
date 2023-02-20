@@ -11,3 +11,7 @@ export function load({ params }) {
 		user
 	}
 }
+
+export const prerender = false;
+
+export const ssr = false
