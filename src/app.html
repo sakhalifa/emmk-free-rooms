@@ -3,6 +3,10 @@
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+		/>
 		<meta name="viewport" content="width=device-width" />
 		%sveltekit.head%
 	</head>
@@ -12,17 +16,20 @@
 </html>
 
 <style>
-	.ec-event-time{
+	.ec.ec-week {
+		width: 100%;
+	}
+	.ec-event-time {
 		display: flex;
 		justify-content: center;
 		color: black;
 	}
 
-	.ec-event-title{
+	.ec-event-title {
 		color: black;
 	}
 
-	.ec-event-body{
+	.ec-event-body {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -33,5 +40,9 @@
 
 	.ec-event-title > .title-bold {
 		font-weight: bold;
+	}
+
+	body {
+		height: 100vh;
 	}
 </style>

@@ -1,5 +1,3 @@
-
-
 type ParamType = {
 	/**The name of the paramter */
 	name: string;
@@ -18,9 +16,7 @@ type ParamType = {
 	/**Returns true iif the parameter has been correctly parsed */
 	_checkFunction: (_: unknown) => Promise<boolean>;
 	/**The message shown if the parsing failed*/
-	_parseFailMessage: string
+	_parseFailMessage: string;
 };
 
-
-
-export type { ParamType};
+export type { ParamType };

@@ -1,82 +1,78 @@
-import { CAS_LOGIN, CAS_PASSWORD } from "$env/static/private"
-import { createClient } from "./ADE-client"
-import { getOrRevalidate } from "./cache"
-import { PlanningOfDay } from "../types.d"
-import { getDaysArray } from "./utils"
-import { convertDateToISODay } from "../utils"
-import { CLEAN_USERS_TIMER } from "$env/static/private"
+import { CAS_LOGIN, CAS_PASSWORD } from '$env/static/private';
+import { createClient } from './ADE-client';
+import { getOrRevalidate } from './cache';
+import { PlanningOfDay } from '../types.d';
+import { getDaysArray } from './utils';
+import { convertDateToISODay } from '../utils';
+import { CLEAN_USERS_TIMER } from '$env/static/private';
 
 /** @type Map<string, import('../types.d').User | null>*/
-let users = new Map()
+let users = new Map();
 
 // eslint-disable-next-line no-unused-vars
 const cleanWorker = setInterval(() => {
-	let toDelete = new Set()
-	for(const [k, v] of users){
-		if(v === null)
-			toDelete.add(k)
+	let toDelete = new Set();
+	for (const [k, v] of users) {
+		if (v === null) toDelete.add(k);
 	}
-	for(const k of toDelete)
-		users.delete(k)
-}, Number.parseInt(CLEAN_USERS_TIMER))
+	for (const k of toDelete) users.delete(k);
+}, Number.parseInt(CLEAN_USERS_TIMER));
 
 /**
- * 
- * @param {string} login 
+ *
+ * @param {string} login
  * @returns {Promise<import("../types.d").User | null>} returns a user object if it's a valid login, else null.
  */
 async function getOrCreateUser(login) {
 	if (users.has(login)) {
-		const val = users.get(login)
-		return val ?? null // Only to remove warning...
+		const val = users.get(login);
+		return val ?? null; // Only to remove warning...
 	}
-	let c = createClient()
-	await c.initializeADEConnection(CAS_LOGIN, CAS_PASSWORD)
+	let c = createClient();
+	await c.initializeADEConnection(CAS_LOGIN, CAS_PASSWORD);
 	await c.sendConnectionRequest();
 	await c.initProject();
 	try {
-		const val = { id: (await c.getADEId(login)), login }
+		const val = { id: await c.getADEId(login), login };
 		if (!val?.id) {
-			users.set(login, null)
-			return null // Return null if the id is 0.
+			users.set(login, null);
+			return null; // Return null if the id is 0.
 		}
-		users.set(login, val)
-		return val
-	}
-	catch (e) {
-		users.set(login, null)
-		return null
+		users.set(login, val);
+		return val;
+	} catch (e) {
+		users.set(login, null);
+		return null;
 	}
 }
 
 /**
- * 
- * @param {import("../types.d").User} user 
- * @param {Date} start 
- * @param {Date} end 
+ *
+ * @param {import("../types.d").User} user
+ * @param {Date} start
+ * @param {Date} end
  */
 async function getPlanningForUser(user, start, end) {
 	/** @type {Promise<import("../types.d").PlanningOfDay>[]} */
-	const promises = []
+	const promises = [];
 
-	const days = getDaysArray(start, end)
+	const days = getDaysArray(start, end);
 	for (const day of days) {
-		if (day.getDay() === 0)
-			continue;
+		if (day.getDay() === 0) continue;
 		const planning = getOrRevalidate(
 			`${user.id}:${convertDateToISODay(day)}`,
 			1000 * 60 * 60,
 			async ({ key }) => {
-				const [id, dayStr] = key.split(":")
-				const date = new Date(dayStr)
-				let c = createClient()
-				return new PlanningOfDay(await c.getPlanningForResource(id, date, date))
+				const [id, dayStr] = key.split(':');
+				const date = new Date(dayStr);
+				let c = createClient();
+				return new PlanningOfDay(await c.getPlanningForResource(id, date, date));
 			}
-		)
-		promises.push(planning)
+		);
+		promises.push(planning);
 	}
 
-	return (await Promise.all(promises))
+	return await Promise.all(promises);
 }
 
-export { getOrCreateUser, getPlanningForUser }
+export { getOrCreateUser, getPlanningForUser };

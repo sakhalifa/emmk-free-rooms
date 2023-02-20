@@ -3,7 +3,6 @@
 </script>
 
 <script lang="js">
-	import { browser } from '$app/environment';
 	import { convertDateToISODay } from '$lib/utils';
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
@@ -32,20 +31,19 @@
 	let options = {
 		view: (Viewport?.Width ?? 0) < 500 ? 'timeGridDay' : 'timeGridWeek',
 		allDaySlot: false,
-		height: '100vh',
 		editable: false,
+		width: '100%',
 		hiddenDays: [0],
 		slotMinTime: '07:00:00',
 		slotMaxTime: '21:00:00',
-		eventSources: [{events: fetchEvents}],
+		eventSources: [{ events: fetchEvents }],
 		eventMouseEnter: showTooltip,
 		eventMouseLeave: removeTooltip
 	};
 	window.addEventListener('keydown', (ev) => {
 		if (ev.key === 'ArrowLeft') window.document.querySelector('.ec-button.ec-prev')?.click();
 		if (ev.key === 'ArrowRight') window.document.querySelector('.ec-button.ec-next')?.click();
-		if(ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') removeTooltip({})
-
+		if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') removeTooltip({});
 	});
 	// options.datesSet = setEvents;
 	/**
@@ -89,11 +87,11 @@
 		let { start, end } = fetchInfo;
 		start = new Date(start);
 		end = new Date(end);
-		if(start.getDay() === 0){
-			start.setDate(start.getDate() + 1)
-			end.setDate(end.getDate() + 1)
+		if (start.getDay() === 0) {
+			start.setDate(start.getDate() + 1);
+			end.setDate(end.getDate() + 1);
 		}
-		console.log(convertDateToISODay(start), convertDateToISODay(end))
+		console.log(convertDateToISODay(start), convertDateToISODay(end));
 		fetch(
 			`/api/users/${data.user?.login ?? 'a'}?start=${convertDateToISODay(
 				start
