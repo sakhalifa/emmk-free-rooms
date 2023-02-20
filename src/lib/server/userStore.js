@@ -4,9 +4,21 @@ import { getOrRevalidate } from "./cache"
 import { PlanningOfDay } from "../types.d"
 import { getDaysArray } from "./utils"
 import { convertDateToISODay } from "../utils"
+import { CLEAN_USERS_TIMER } from "$env/static/private"
 
-/** @type Map<string, import('../types.d').User>*/
+/** @type Map<string, import('../types.d').User | null>*/
 let users = new Map()
+
+// eslint-disable-next-line no-unused-vars
+const cleanWorker = setInterval(() => {
+	let toDelete = new Set()
+	for(const [k, v] of users){
+		if(v === null)
+			toDelete.add(k)
+	}
+	for(const k of toDelete)
+		users.delete(k)
+}, Number.parseInt(CLEAN_USERS_TIMER))
 
 /**
  * 
@@ -24,12 +36,15 @@ async function getOrCreateUser(login) {
 	await c.initProject();
 	try {
 		const val = { id: (await c.getADEId(login)), login }
-		if (!val?.id)
+		if (!val?.id) {
+			users.set(login, null)
 			return null // Return null if the id is 0.
+		}
 		users.set(login, val)
 		return val
 	}
 	catch (e) {
+		users.set(login, null)
 		return null
 	}
 }

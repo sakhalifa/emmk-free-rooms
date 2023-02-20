@@ -2,8 +2,8 @@ import { getOrCreateUser } from '$lib/server/userStore';
 import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageLoad} */
-export function load({ params }) {
-	const user = getOrCreateUser(params.login)
+export async function load({ params }) {
+	const user = await getOrCreateUser(params.login)
 	if (user === null)
 		throw error(400, 'Invalid login!')
 

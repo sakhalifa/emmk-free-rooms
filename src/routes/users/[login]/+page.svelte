@@ -20,7 +20,7 @@
 		border: 'solid black 1px',
 		borderTopLeftRadius: '5px',
 		borderTopRightRadius: '5px',
-		zIndex: 2
+		zIndex: 999
 	};
 
 	/**
@@ -36,15 +36,18 @@
 		editable: false,
 		hiddenDays: [0],
 		slotMinTime: '07:00:00',
-		slotMaxTime: '21:00:00'
+		slotMaxTime: '21:00:00',
+		eventSources: [{events: fetchEvents}],
+		eventMouseEnter: showTooltip,
+		eventMouseLeave: removeTooltip
 	};
 	window.addEventListener('keydown', (ev) => {
 		if (ev.key === 'ArrowLeft') window.document.querySelector('.ec-button.ec-prev')?.click();
 		if (ev.key === 'ArrowRight') window.document.querySelector('.ec-button.ec-next')?.click();
+		if(ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') removeTooltip({})
+
 	});
-	options.datesSet = setEvents;
-	options.eventMouseEnter = showTooltip;
-	options.eventMouseLeave = removeTooltip;
+	// options.datesSet = setEvents;
 	/**
 	 *
 	 * @param {{clientX: number, clientY: number}} ev
@@ -69,20 +72,21 @@
 
 	/**
 	 *
-	 * @param {{el: HTMLElement, event: any}} info
+	 * @param {{el?: HTMLElement}} info
 	 */
 	function removeTooltip(info) {
 		const { el } = info;
-		el.removeEventListener('pointermove', trackTooltip);
+		el?.removeEventListener('pointermove', trackTooltip);
 		tooltipRef.style.display = 'none';
 	}
 
 	/**
 	 *
-	 * @param {{start: Date, end: Date}} info
+	 * @param {{start: Date, end: Date}} fetchInfo
+	 * @param {(_: any[]) => void} successCallback
 	 */
-	function setEvents(info) {
-		let { start, end } = info;
+	function fetchEvents(fetchInfo, successCallback) {
+		let { start, end } = fetchInfo;
 		start = new Date(start);
 		end = new Date(end);
 		if(start.getDay() === 0){
@@ -112,8 +116,8 @@
 							)}`
 						});
 					}
-					options.events = events;
 				}
+				successCallback(events);
 			});
 	}
 </script>

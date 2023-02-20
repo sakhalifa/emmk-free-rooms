@@ -1,5 +1,5 @@
 import waitUntil from "async-wait-until"
-import { CLEAN_TIMER } from "$env/static/private"
+import { CLEAN_FETCH_TIMER } from "$env/static/private"
 
 type FetcherOptions = {
 	key: string;
@@ -26,7 +26,7 @@ const cleaner = setInterval(() => {
 	for (const cacheKey of toDelete) {
 		cache.delete(cacheKey)
 	}
-}, Number.parseInt(CLEAN_TIMER))
+}, Number.parseInt(CLEAN_FETCH_TIMER))
 
 function _isExpired(el: CacheElement) {
 	return !el.isFetching && Date.now() - el.ttl > el.lastUpdate
