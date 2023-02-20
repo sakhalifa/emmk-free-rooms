@@ -1,21 +1,27 @@
+<script context="module">
+	import Viewport from 'svelte-viewport-info';
+</script>
+
 <script lang="js">
 	import { browser } from '$app/environment';
 	import { convertDateToISODay } from '$lib/utils';
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
-
 	/** @type import('./$types').PageData*/
 	export let data;
 
+	let innerWidth = 0,
+		innerHeight = 0;
+
 	const activeTooltipStyle = {
-		position: "absolute",
-		display: "block",
-		width: "fit-content",
-		border: "solid black 1px",
-		borderTopLeftRadius: "5px",
-		borderTopRightRadius: "5px",
-		zIndex: 2,
-	}
+		position: 'absolute',
+		display: 'block',
+		width: 'fit-content',
+		border: 'solid black 1px',
+		borderTopLeftRadius: '5px',
+		borderTopRightRadius: '5px',
+		zIndex: 2
+	};
 
 	/**
 	 * @type {HTMLDivElement}
@@ -33,47 +39,44 @@
 		slotMaxTime: '21:00:00'
 	};
 	if (browser) {
-		window.addEventListener("keydown", (ev) => {
-			if(ev.key === "ArrowLeft")
-				window.document.querySelector(".ec-button.ec-prev")?.click()
-			if(ev.key === "ArrowRight")
-				window.document.querySelector(".ec-button.ec-next")?.click()
-
-			
-		})
+		if (Viewport.Width < 500) options.view = 'timeGridDay';
+		window.addEventListener('keydown', (ev) => {
+			if (ev.key === 'ArrowLeft') window.document.querySelector('.ec-button.ec-prev')?.click();
+			if (ev.key === 'ArrowRight') window.document.querySelector('.ec-button.ec-next')?.click();
+		});
 		options.datesSet = setEvents;
-		options.eventMouseEnter = showTooltip
-		options.eventMouseLeave = removeTooltip
+		options.eventMouseEnter = showTooltip;
+		options.eventMouseLeave = removeTooltip;
 		/**
-		 * 
+		 *
 		 * @param {{clientX: number, clientY: number}} ev
 		 */
-		function trackTooltip(ev){
-			tooltipRef.style.left = `${ev.clientX - tooltipRef.clientWidth/2}px`
-			tooltipRef.style.top = `${ev.clientY + 20}px`
+		function trackTooltip(ev) {
+			tooltipRef.style.left = `${ev.clientX - tooltipRef.clientWidth / 2}px`;
+			tooltipRef.style.top = `${ev.clientY + 20}px`;
 		}
 		/**
-		 * 
+		 *
 		 * @param {{el: HTMLElement, event: any, jsEvent: MouseEvent}} info
 		 */
-		function showTooltip(info){
-			trackTooltip(info.jsEvent)
-			const {el, event} = info
-			const content = event.titleHTML.split("<br>")
-			tooltipRef.children[0].innerHTML = content[0]
-			tooltipRef.children[1].innerHTML = content.slice(1).join("<br>")
-			Object.assign(tooltipRef.style, activeTooltipStyle)
-			el.addEventListener("pointermove", trackTooltip)
+		function showTooltip(info) {
+			trackTooltip(info.jsEvent);
+			const { el, event } = info;
+			const content = event.titleHTML.split('<br>');
+			tooltipRef.children[0].innerHTML = content[0];
+			tooltipRef.children[1].innerHTML = content.slice(1).join('<br>');
+			Object.assign(tooltipRef.style, activeTooltipStyle);
+			el.addEventListener('pointermove', trackTooltip);
 		}
 
 		/**
-		 * 
+		 *
 		 * @param {{el: HTMLElement, event: any}} info
 		 */
-		function removeTooltip(info){
-			const {el} = info
-			el.removeEventListener("pointermove", trackTooltip)
-			tooltipRef.style.display = "none"
+		function removeTooltip(info) {
+			const { el } = info;
+			el.removeEventListener('pointermove', trackTooltip);
+			tooltipRef.style.display = 'none';
 		}
 
 		/**
@@ -101,7 +104,9 @@
 								id: ev._id,
 								start: new Date(ev.start),
 								end: new Date(ev.end),
-								titleHTML: `<span class="title-bold">${ev.summary}</span><br>${ev.location.replaceAll(",", "<br>")}`
+								titleHTML: `<span class="title-bold">${
+									ev.summary
+								}</span><br>${ev.location.replaceAll(',', '<br>')}`
 							});
 						}
 						options.events = events;
@@ -114,16 +119,13 @@
 <div class="tooltip" bind:this={tooltipRef}>
 	<div class="summary">FabLab</div>
 	<div class="content">
-		16h20 - 16h50<br>
-		EB-...<br>
-		EB-...<br>
+		16h20 - 16h50<br />
+		EB-...<br />
+		EB-...<br />
 	</div>
-
 </div>
 
 <Calendar {options} {plugins} />
-
-
 
 <style>
 	div.tooltip {
@@ -147,9 +149,5 @@
 		font-size: small;
 		padding-left: 1em;
 		padding-right: 1em;
-	}
-
-	.testStyle {
-		color: black;
 	}
 </style>
