@@ -46,7 +46,7 @@
 		options.eventMouseLeave = removeTooltip
 		/**
 		 * 
-		 * @param {PointerEvent} ev
+		 * @param {{clientX: number, clientY: number}} ev
 		 */
 		function trackTooltip(ev){
 			tooltipRef.style.left = `${ev.clientX - tooltipRef.clientWidth/2}px`
@@ -54,9 +54,10 @@
 		}
 		/**
 		 * 
-		 * @param {{el: HTMLElement, event: any}} info
+		 * @param {{el: HTMLElement, event: any, jsEvent: MouseEvent}} info
 		 */
 		function showTooltip(info){
+			trackTooltip(info.jsEvent)
 			const {el, event} = info
 			const content = event.titleHTML.split("<br>")
 			tooltipRef.children[0].innerHTML = content[0]
@@ -120,7 +121,7 @@
 
 </div>
 
-<Calendar id="calendar" {options} {plugins} />
+<Calendar {options} {plugins} />
 
 
 
