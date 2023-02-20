@@ -7,13 +7,7 @@ function removePrivateParameters(obj) {
 	return obj.map((o) => Object.fromEntries(Object.entries(o).filter(([key]) => !key.startsWith('_'))));
 }
 
-/**
- * 
- * @param {Date} timestamp 
- */
-function convertDateToISODay(timestamp) {
-	return timestamp.toISOString().split('T')[0]
-}
+
 
 
 /**
@@ -179,4 +173,4 @@ async function checkError(searchParams, params) {
 	return [false, parsedParams]
 }
 
-export { removePrivateParameters, checkError, convertDateToISODay, setDayOfWeek, getMonday, getSaturday, parseRegex, getDaysArray, dateRangeOverlaps, isValidDate };
+export { removePrivateParameters, checkError, setDayOfWeek, getMonday, getSaturday, parseRegex, getDaysArray, dateRangeOverlaps, isValidDate };

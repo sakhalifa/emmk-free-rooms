@@ -21,7 +21,7 @@ export async function GET({ url, params }) {
 		return json(value, { status: 400 });
 
 	/**
-	 * @type {{start: Date, end: Date, user: import('$lib/server/types.d').User}}
+	 * @type {{start: Date, end: Date, user: import('$lib/types.d').User}}
 	 */
 	let { start, end, user } = value
 	if(start === undefined)

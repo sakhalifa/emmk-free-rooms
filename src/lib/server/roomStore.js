@@ -1,8 +1,9 @@
 import { readFile } from 'fs/promises'
-import { convertDateToISODay, getDaysArray } from './utils';
+import { getDaysArray } from './utils';
+import { convertDateToISODay } from '../utils'
 import { createClient } from "./ADE-client";
 import { getOrRevalidate } from './cache';
-import { PlanningOfDay } from './types.d';
+import { PlanningOfDay } from '../types.d';
 
 /**
  * @type {import('./ADE-client').Room[] | undefined}
@@ -54,13 +55,13 @@ async function getPlanningForRoom(room, start, end) {
 	const daysArray = getDaysArray(start, end)
 	/**@type {Promise<PlanningOfDay>[]} */
 	const promises = []
-	for(const day of daysArray){
-		if(day.getDay() === 0)
+	for (const day of daysArray) {
+		if (day.getDay() === 0)
 			continue;
 		promises.push(getOrRevalidate(
 			`${room.id}:${convertDateToISODay(day)}`,
 			MS_IN_SEC * SEC_IN_MIN * MIN_IN_HOUR * 5, //ttl of 5h,
-			async ({key}) => {
+			async ({ key }) => {
 				const [id, dayStr] = key.split(":")
 				const client = createClient()
 				const day = new Date(dayStr)
@@ -69,7 +70,7 @@ async function getPlanningForRoom(room, start, end) {
 		))
 	}
 	let vals = await Promise.all(promises)
-	
+
 	return vals
 }
 export { getRooms, refreshRooms, getPlanningForRoom }

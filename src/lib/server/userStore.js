@@ -1,16 +1,17 @@
 import { CAS_LOGIN, CAS_PASSWORD } from "$env/static/private"
 import { createClient } from "./ADE-client"
 import { getOrRevalidate } from "./cache"
-import { PlanningOfDay } from "./types.d"
-import { convertDateToISODay, getDaysArray } from "./utils"
+import { PlanningOfDay } from "../types.d"
+import { getDaysArray } from "./utils"
+import { convertDateToISODay } from "../utils"
 
-/** @type Map<string, import('./types.d').User>*/
+/** @type Map<string, import('../types.d').User>*/
 let users = new Map()
 
 /**
  * 
  * @param {string} login 
- * @returns {Promise<import("./types.d").User | null>} returns a user object if it's a valid login, else null.
+ * @returns {Promise<import("../types.d").User | null>} returns a user object if it's a valid login, else null.
  */
 async function getOrCreateUser(login) {
 	if (users.has(login)) {
@@ -22,7 +23,7 @@ async function getOrCreateUser(login) {
 	await c.sendConnectionRequest();
 	await c.initProject();
 	try {
-		const val = { id: (await c.getADEId(login)) }
+		const val = { id: (await c.getADEId(login)), login }
 		if (!val?.id)
 			return null // Return null if the id is 0.
 		users.set(login, val)
@@ -35,12 +36,12 @@ async function getOrCreateUser(login) {
 
 /**
  * 
- * @param {import("./types.d").User} user 
+ * @param {import("../types.d").User} user 
  * @param {Date} start 
  * @param {Date} end 
  */
 async function getPlanningForUser(user, start, end) {
-	/** @type {Promise<import("./types.d").PlanningOfDay>[]} */
+	/** @type {Promise<import("../types.d").PlanningOfDay>[]} */
 	const promises = []
 
 	const days = getDaysArray(start, end)
