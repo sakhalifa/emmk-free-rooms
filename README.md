@@ -16,4 +16,4 @@ This repository uses a submodule. It is therefore really appreciated if you use 
 ## Installation
 
 Either do it manually, or use the script [createDockerImage.sh](createDockerImage.sh) to create a clean docker image.
-The docker image will always launch the server on its local port 8000, it's up to you to map it to another port.
+The docker image will always launch the server on its local port 80, it's up to you to map it to another port.
