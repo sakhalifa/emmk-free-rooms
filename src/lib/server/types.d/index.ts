@@ -12,9 +12,9 @@ type ParamType = {
 	/**Its allowed values. This is checked after min and max are checked */
 	values?: unknown[];
 	/**A parser function that converts a string/number into its correct type */
-	_parser: (_: string) => Promise<unknown>;
+	_parser: (_: string) => Promise<unknown> | unknown;
 	/**Returns true iif the parameter has been correctly parsed */
-	_checkFunction: (_: unknown) => Promise<boolean>;
+	_checkFunction: (_: unknown) => Promise<boolean> | boolean;
 	/**The message shown if the parsing failed*/
 	_parseFailMessage: string;
 };

@@ -1,89 +1,66 @@
-import { checkError, parseRegex, dateRangeOverlaps } from '$lib/server/utils';
-import { error, json } from '@sveltejs/kit';
+import { checkError, parseRegex, dateRangeOverlaps, isValidDate } from '$lib/server/utils';
+import { json } from '@sveltejs/kit';
 import { getPlanningForRoom, getRooms } from '$lib/server/roomStore';
-import { setDayOfWeek } from '$lib/server/utils';
+
+/**
+ *
+ * @param {string} s
+ */
+function createDateUTC(s) {
+	const incorrectD = new Date(s);
+	return new Date(
+		Date.UTC(
+			incorrectD.getFullYear(),
+			incorrectD.getMonth(),
+			incorrectD.getDate(),
+			incorrectD.getHours(),
+			incorrectD.getMinutes(),
+			incorrectD.getSeconds(),
+			incorrectD.getMilliseconds()
+		)
+	);
+}
 
 /**
  * @type {import('$lib/server/types.d').ParamType[]}
  */
 const params = [
 	{
-		name: 'startHour',
+		name: 'start',
 		required: true,
-		type: 'int',
-		min: 0,
-		max: 24,
-		_parser: async (n) => Number(n),
-		_checkFunction: async (n) => Number.isInteger(n),
-		_parseFailMessage: 'Not a valid integer!'
+		type: 'date',
+		_parser: createDateUTC,
+		_checkFunction: (d) => (d instanceof Date ? isValidDate(d) : false),
+		_parseFailMessage:
+			'Not a valid Date! The string should be parseable by the JS default Date constructor'
 	},
 	{
-		name: 'startMin',
+		name: 'end',
 		required: true,
-		type: 'int',
-		min: 0,
-		max: 60,
-		_parser: async (n) => Number(n),
-		_checkFunction: async (n) => Number.isInteger(n),
-		_parseFailMessage: 'Not a valid integer!'
-	},
-	{
-		name: 'endHour',
-		required: true,
-		type: 'int',
-		min: 0,
-		max: 24,
-		_parser: async (n) => Number(n),
-		_checkFunction: async (n) => Number.isInteger(n),
-		_parseFailMessage: 'Not a valid integer!'
-	},
-	{
-		name: 'endMin',
-		required: true,
-		type: 'int',
-		min: 0,
-		max: 60,
-		_parser: async (n) => Number(n),
-		_checkFunction: async (n) => Number.isInteger(n),
-		_parseFailMessage: 'Not a valid integer!'
-	},
-	{
-		name: 'day',
-		required: false,
-		type: 'int',
-		min: 0,
-		max: 6,
-		_parser: async (n) => Number(n),
-		_checkFunction: async (n) => Number.isInteger(n),
-		_parseFailMessage: 'Not a valid integer!'
+		type: 'date',
+		_parser: createDateUTC,
+		_checkFunction: (d) => (d instanceof Date ? isValidDate(d) : false),
+		_parseFailMessage:
+			'Not a valid Date! The string should be parseable by the JS default Date constructor'
 	},
 	{
 		name: 'searchRegex',
 		required: false,
 		type: 'regex',
 		_parser: parseRegex,
-		_checkFunction: async (r) => typeof r === 'object',
+		_checkFunction: (r) => typeof r === 'object',
 		_parseFailMessage: 'Not a valid regex!'
 	}
 ];
 
 /**
  *
- * @param {number} startHour
- * @param {number} startMin
- * @param {number} endHour
- * @param {number} endMin
- * @param {Date} refDate
+ * @param {Date} start
+ * @param {Date} end
  * @param {import('$lib/server/ADE-client/src/types').Room[]} rooms
  * @returns {Promise<Response>}
  */
-async function getFreeRooms(startHour, startMin, endHour, endMin, refDate, rooms) {
-	const startDate = new Date(refDate);
-	startDate.setHours(startHour, startMin, 0, 0);
-	const endDate = new Date(refDate);
-	endDate.setHours(endHour, endMin, 0, 0);
-
-	const myR = rooms.find((r) => r.name.includes('I107'));
+async function getFreeRooms(start, end, rooms) {
 	/**
 	 * @type import('$lib/server/ADE-client/src/types').Room[]
 	 */
@@ -92,23 +69,19 @@ async function getFreeRooms(startHour, startMin, endHour, endMin, refDate, rooms
 		console.log(`fetching ${r.name}`);
 
 		// @ts-ignore
-		const planning = (await getPlanningForRoom(r, startDate, startDate))[0];
+		const planning = (await getPlanningForRoom(r, start, end))[0];
 
-		console.log(`Doing range check...`);
 		let free = true;
 		for (const ev of planning.events) {
-			if (dateRangeOverlaps(startDate, endDate, ev.start, ev.end)) {
+			if (dateRangeOverlaps(start, end, ev.start, ev.end)) {
 				free = false;
 				break;
 			}
 		}
 		if (free) {
-			console.log(`Room ${r.name} is free between `);
 			freeRooms.push(r);
 		}
 	}
-
-	if (myR === undefined) throw error(500);
 
 	return json(freeRooms);
 }
@@ -119,25 +92,10 @@ export async function GET({ url }) {
 	if (errorOccured) return json(value, { status: 400 });
 
 	/**
-	 * @type {{startHour: number, startMin: number, endHour:number, endMin:number, day:number, searchRegex:RegExp}}
+	 * @type {{start: Date, end: Date, searchRegex:RegExp}}
 	 */
-	let { startHour, startMin, endHour, endMin, day, searchRegex } = value;
-	if (day === undefined && new Date().getDay() === 0) {
-		throw error(
-			400,
-			'Cannot use API on sunday. Please specify a day. 0 for Monday to 5 for Saturday'
-		);
-	}
-	if (day === undefined) day = new Date().getDay();
-	else day += 1;
+	let { start, end, searchRegex } = value;
 
 	const rooms = (await getRooms()).filter((r) => (searchRegex ? searchRegex.test(r.name) : true));
-	return await getFreeRooms(
-		startHour,
-		startMin,
-		endHour,
-		endMin,
-		setDayOfWeek(day, new Date('2023-02-20')),
-		rooms
-	);
+	return await getFreeRooms(start, end, rooms);
 }

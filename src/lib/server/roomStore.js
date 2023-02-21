@@ -4,7 +4,7 @@ import { convertDateToISODay } from '../utils';
 import { getOrRevalidate } from './cache';
 import { PlanningOfDay } from '../types.d';
 import { createClient } from './ADE-client/src/clients/ADEClient';
-import { CAS_LOGIN, CAS_PASSWORD } from '$env/static/private'
+import { CAS_LOGIN, CAS_PASSWORD } from '$env/static/private';
 
 /**
  * @type {import('./ADE-client/src/types').Room[] | undefined}
@@ -62,7 +62,7 @@ async function getPlanningForRoom(room, start, end) {
 				MS_IN_SEC * SEC_IN_MIN * MIN_IN_HOUR * 5, //ttl of 5h,
 				async ({ key }) => {
 					const [idStr, dayStr] = key.split(':');
-					const id = Number.parseInt(idStr)
+					const id = Number.parseInt(idStr);
 					const client = await createClient(CAS_LOGIN, CAS_PASSWORD);
 					const day = new Date(dayStr);
 					return new PlanningOfDay(await client.getRoomPlanning(id, day, day));

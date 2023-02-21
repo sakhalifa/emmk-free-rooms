@@ -9,8 +9,8 @@
 <ul>
 	<li>Mise à jour librairie interne pour communiquer avec ADE</li>
 	<li>
-		Couleurs sur l'EDT en fonction du type du cours! (Mrc la MaJ de la librairie).<br>
-		Si vous ne savez pas à quelle couleur correspond quoi, il y a le tooltip, ou alors...<br>
+		Couleurs sur l'EDT en fonction du type du cours! (Mrc la MaJ de la librairie).<br />
+		Si vous ne savez pas à quelle couleur correspond quoi, il y a le tooltip, ou alors...<br />
 		La liste de <span class="rainbow">correspondance</span>:
 		<table>
 			<thead>

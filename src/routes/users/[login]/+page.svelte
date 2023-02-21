@@ -63,7 +63,9 @@
 		const { el, event } = info;
 		const content = event.titleHTML.split('<br>');
 		tooltipRef.children[0].innerHTML = content[0];
-		tooltipRef.children[1].innerHTML = `${event.extendedProps.type ?? "inconnu"}<br>${content.slice(1).join('<br>')}`
+		tooltipRef.children[1].innerHTML = `${event.extendedProps.type ?? 'inconnu'}<br>${content
+			.slice(1)
+			.join('<br>')}`;
 		Object.assign(tooltipRef.style, activeTooltipStyle);
 		el.addEventListener('pointermove', trackTooltip);
 	}
@@ -93,9 +95,9 @@
 			case 'ENSEIGNANTS':
 				return 'red';
 			case 'TP':
-				return 'lightgray'
+				return 'lightgray';
 			default:
-				return ''
+				return '';
 		}
 	}
 
@@ -128,9 +130,9 @@
 							id: ev.description.id,
 							start: new Date(ev.start),
 							end: new Date(ev.end),
-							titleHTML: `<span class="title-bold">${
-								ev.summary
-							}</span><br>${ev.location?.replaceAll(',', '<br>') ?? ""}`,
+							titleHTML: `<span class="title-bold">${ev.summary}</span><br>${
+								ev.location?.replaceAll(',', '<br>') ?? ''
+							}`,
 							color: getColorFromType(ev.description.type),
 							extendedProps: {
 								type: ev.description.type

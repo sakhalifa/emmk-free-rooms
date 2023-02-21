@@ -61,7 +61,7 @@ async function getPlanningForUser(user, start, end) {
 			1000 * 60 * 60,
 			async ({ key }) => {
 				const [idStr, dayStr] = key.split(':');
-				const id = Number.parseInt(idStr)
+				const id = Number.parseInt(idStr);
 				const date = new Date(dayStr);
 				let c = await createClient(CAS_LOGIN, CAS_PASSWORD);
 				return new PlanningOfDay(await c.getStudentPlanning(id, date, date));
