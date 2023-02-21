@@ -44,6 +44,13 @@
 		</table>
 	</li>
 </ul>
+<h2>0.1.2, Maintenabilité + Dépréciation</h2>
+<ul>
+	<li>- Un peu de refactoring pour le calendrier, pour quelque chose d'utile plus tard 👀</li>
+	<li>- Résolution d'un bug qui faisait en sorte que des fois, quand on appuyait sur les flèches avec le clavier, ça le faisait 2x</li>
+	<li>- Dépréciation de l'API pour les salles libres. L'API a changé lol.</li>
+	<li>- Enfin une "délimitation" header main footer</li>
+</ul>
 
 <style>
 	.rainbow {

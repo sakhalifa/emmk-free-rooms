@@ -19,8 +19,10 @@
 
 <style>
 	nav {
+		padding: 1em;
 		display: flex;
 		justify-content: space-around;
+		background-color: #039be5;
 	}
 
 	nav > a {
