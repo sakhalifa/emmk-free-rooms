@@ -134,6 +134,7 @@
 			.slice(1)
 			.join('<br>')}`;
 		Object.assign(tooltipRef.style, activeTooltipStyle);
+		tooltipRef.children[0].style.backgroundColor = info.event.backgroundColor ? info.event.backgroundColor : "#039be5";
 		el.addEventListener('pointermove', trackTooltip);
 	}
 
