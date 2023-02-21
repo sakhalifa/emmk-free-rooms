@@ -74,7 +74,7 @@ const params = [
  * @param {number} endHour
  * @param {number} endMin
  * @param {Date} refDate
- * @param {import('$lib/server/ADE-client').Room[]} rooms
+ * @param {import('$lib/server/ADE-client/src/types').Room[]} rooms
  * @returns {Promise<Response>}
  */
 async function getFreeRooms(startHour, startMin, endHour, endMin, refDate, rooms) {
@@ -85,7 +85,7 @@ async function getFreeRooms(startHour, startMin, endHour, endMin, refDate, rooms
 
 	const myR = rooms.find((r) => r.name.includes('I107'));
 	/**
-	 * @type import('$lib/server/ADE-client').Room[]
+	 * @type import('$lib/server/ADE-client/src/types').Room[]
 	 */
 	const freeRooms = [];
 	for (const r of rooms) {
@@ -140,9 +140,4 @@ export async function GET({ url }) {
 		setDayOfWeek(day, new Date('2023-02-20')),
 		rooms
 	);
-
-	// const r = (await getRooms()).find((r) => r.name.includes("I101"))
-	// if (r === undefined)
-	// 	throw error(500)
-	// return json(await getPlanningForRoom(r, new Date("2023-02-20"), new Date("2023-02-27")))
 }

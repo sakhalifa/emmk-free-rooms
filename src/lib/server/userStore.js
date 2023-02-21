@@ -1,5 +1,5 @@
 import { CAS_LOGIN, CAS_PASSWORD } from '$env/static/private';
-import { createClient } from './ADE-client';
+import { createClient } from './ADE-client/src/clients/ADEClient';
 import { getOrRevalidate } from './cache';
 import { PlanningOfDay } from '../types.d';
 import { getDaysArray } from './utils';
@@ -28,10 +28,7 @@ async function getOrCreateUser(login) {
 		const val = users.get(login);
 		return val ?? null; // Only to remove warning...
 	}
-	let c = createClient();
-	await c.initializeADEConnection(CAS_LOGIN, CAS_PASSWORD);
-	await c.sendConnectionRequest();
-	await c.initProject();
+	let c = await createClient(CAS_LOGIN, CAS_PASSWORD);
 	try {
 		const val = { id: await c.getADEId(login), login };
 		if (!val?.id) {
@@ -63,10 +60,11 @@ async function getPlanningForUser(user, start, end) {
 			`${user.id}:${convertDateToISODay(day)}`,
 			1000 * 60 * 60,
 			async ({ key }) => {
-				const [id, dayStr] = key.split(':');
+				const [idStr, dayStr] = key.split(':');
+				const id = Number.parseInt(idStr)
 				const date = new Date(dayStr);
-				let c = createClient();
-				return new PlanningOfDay(await c.getPlanningForResource(id, date, date));
+				let c = await createClient(CAS_LOGIN, CAS_PASSWORD);
+				return new PlanningOfDay(await c.getStudentPlanning(id, date, date));
 			}
 		);
 		promises.push(planning);

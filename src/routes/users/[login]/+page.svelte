@@ -105,10 +105,10 @@
 				for (const planning of plannings) {
 					for (const ev of planning.events) {
 						events.push({
-							id: ev._id,
+							id: ev.description.id,
 							start: new Date(ev.start),
 							end: new Date(ev.end),
-							titleHTML: `<span class="title-bold">${ev.summary}</span><br>${ev.location.replaceAll(
+							titleHTML: `<span class="title-bold">${ev.summary}</span><br>${ev.location?.replaceAll(
 								',',
 								'<br>'
 							)}`
