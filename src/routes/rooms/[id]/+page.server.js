@@ -15,3 +15,7 @@ export async function load({params}){
 		room
 	}
 }
+
+export const prerender = false;
+
+export const ssr = false;

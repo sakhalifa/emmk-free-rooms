@@ -3,6 +3,7 @@
 	import { convertDateToISODay } from '$lib/utils';
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
+	import { onMount } from 'svelte';
 </script>
 
 <script>
@@ -92,10 +93,14 @@
 		eventMouseEnter: showTooltip,
 		eventMouseLeave: removeTooltip
 	};
-	window.addEventListener('keydown', (ev) => {
-		if (ev.key === 'ArrowLeft') window.document.querySelector('.ec-button.ec-prev')?.click();
-		if (ev.key === 'ArrowRight') window.document.querySelector('.ec-button.ec-next')?.click();
-		if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') removeTooltip({});
+
+	onMount(() => {
+		console.log("here")
+		window.addEventListener('keydown', (ev) => {
+			if (ev.key === 'ArrowLeft') window.document.querySelector('.ec-button.ec-prev')?.click();
+			if (ev.key === 'ArrowRight') window.document.querySelector('.ec-button.ec-next')?.click();
+			if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') removeTooltip({});
+		});
 	});
 	// options.datesSet = setEvents;
 	/**
@@ -133,12 +138,14 @@
 	}
 </script>
 
-<div class="tooltip" bind:this={tooltipRef}>
-	<div class="summary" />
-	<div class="content" />
-</div>
+<div id="calendar">
+	<div class="tooltip" bind:this={tooltipRef}>
+		<div class="summary" />
+		<div class="content" />
+	</div>
 
-<Calendar {options} {plugins} />
+	<Calendar {options} {plugins} />
+</div>
 
 <style>
 	div.tooltip {
@@ -162,5 +169,9 @@
 		font-size: small;
 		padding-left: 1em;
 		padding-right: 1em;
+	}
+
+	#calendar {
+		width: 100%;
 	}
 </style>
