@@ -1,4 +1,8 @@
 <h1>Changelog</h1>
+<h2>0.1.2.1, Thibaut stp...</h2>
+<ul>
+	<li>- Rajout d'un petit "Loading..." quand on utilise le calendrier, car certains <em>malotrus</em> ont décidé de spam 💀</li>
+</ul>
 <h2>0.1.2, Maintenabilité + Dépréciation</h2>
 <ul>
 	<li>- Un peu de refactoring pour le calendrier, pour quelque chose d'utile plus tard 👀</li>

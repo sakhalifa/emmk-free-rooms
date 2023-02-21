@@ -7,7 +7,8 @@
 </script>
 
 <script>
-	/** @type (s: Date, e: Date) => string */
+	let loading = false;
+	/** @type {(s: Date, e: Date) => string} */
 	export let getUrl;
 	/**
 	 *
@@ -42,6 +43,7 @@
 			start.setDate(start.getDate() + 1);
 			end.setDate(end.getDate() + 1);
 		}
+		loading = true;
 		fetch(getUrl(start, end))
 			.then((r) => r.json())
 			.then((d) => {
@@ -64,6 +66,7 @@
 						});
 					}
 				}
+				loading = false;
 				successCallback(events);
 			});
 	}
@@ -94,13 +97,20 @@
 		eventMouseLeave: removeTooltip
 	};
 
-	onMount(() => {
-		console.log("here")
-		window.addEventListener('keydown', (ev) => {
+	/**
+	 *
+	 * @param {KeyboardEvent} ev
+	 */
+	function handleKeydown(ev) {
+		if (!loading) {
 			if (ev.key === 'ArrowLeft') window.document.querySelector('.ec-button.ec-prev')?.click();
 			if (ev.key === 'ArrowRight') window.document.querySelector('.ec-button.ec-next')?.click();
 			if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') removeTooltip({});
-		});
+		}
+	}
+
+	onMount(() => {
+		window.addEventListener('keydown', handleKeydown);
 	});
 	// options.datesSet = setEvents;
 	/**
@@ -138,16 +148,31 @@
 	}
 </script>
 
+{#if loading}
+	<div id="overlay">Page loading...</div>
+{/if}
 <div id="calendar">
 	<div class="tooltip" bind:this={tooltipRef}>
 		<div class="summary" />
 		<div class="content" />
 	</div>
-
 	<Calendar {options} {plugins} />
 </div>
 
 <style>
+	#overlay {
+		margin: 0;
+		top: 0;
+		width: 100vw;
+		height: 100vh;
+		position: absolute;
+		background-color: rgba(211, 211, 211, 0.5);
+		z-index: 999;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
 	div.tooltip {
 		display: none;
 	}
