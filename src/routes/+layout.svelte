@@ -3,6 +3,7 @@
 		<a href="/users">ADE</a>
 		<a href="/"><i class="fa fa-home" style="font-size: x-large" /></a>
 		<a href="/rooms/free">Salles libres</a>
+		<a href="/changelog">Changelog</a>
 	</nav>
 	<main>
 		<slot />
