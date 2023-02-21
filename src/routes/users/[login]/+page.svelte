@@ -63,7 +63,7 @@
 		const { el, event } = info;
 		const content = event.titleHTML.split('<br>');
 		tooltipRef.children[0].innerHTML = content[0];
-		tooltipRef.children[1].innerHTML = content.slice(1).join('<br>');
+		tooltipRef.children[1].innerHTML = `${event.extendedProps.type ?? "inconnu"}<br>${content.slice(1).join('<br>')}`
 		Object.assign(tooltipRef.style, activeTooltipStyle);
 		el.addEventListener('pointermove', trackTooltip);
 	}
@@ -80,6 +80,27 @@
 
 	/**
 	 *
+	 * @param {string | null} type
+	 */
+	function getColorFromType(type) {
+		switch (type) {
+			case 'CM':
+				return 'yellow';
+			case 'CI':
+				return 'lime';
+			case 'TD':
+				return 'cyan';
+			case 'ENSEIGNANTS':
+				return 'red';
+			case 'TP':
+				return 'lightgray'
+			default:
+				return ''
+		}
+	}
+
+	/**
+	 *
 	 * @param {{start: Date, end: Date}} fetchInfo
 	 * @param {(_: any[]) => void} successCallback
 	 */
@@ -91,7 +112,6 @@
 			start.setDate(start.getDate() + 1);
 			end.setDate(end.getDate() + 1);
 		}
-		console.log(convertDateToISODay(start), convertDateToISODay(end));
 		fetch(
 			`/api/users/${data.user?.login ?? 'a'}?start=${convertDateToISODay(
 				start
@@ -108,10 +128,13 @@
 							id: ev.description.id,
 							start: new Date(ev.start),
 							end: new Date(ev.end),
-							titleHTML: `<span class="title-bold">${ev.summary}</span><br>${ev.location?.replaceAll(
-								',',
-								'<br>'
-							)}`
+							titleHTML: `<span class="title-bold">${
+								ev.summary
+							}</span><br>${ev.location?.replaceAll(',', '<br>') ?? ""}`,
+							color: getColorFromType(ev.description.type),
+							extendedProps: {
+								type: ev.description.type
+							}
 						});
 					}
 				}
