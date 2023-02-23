@@ -1,6 +1,7 @@
 import { checkError, isValidDate } from '$lib/server/utils';
 import { json } from '@sveltejs/kit';
 import { getOrCreateUser, getPlanningForUser } from '$lib/server/userStore';
+import { handleCASLogin } from '$lib/server/cas';
 
 /**
  * @type {import('$lib/server/types.d').ParamType[]}
@@ -12,7 +13,7 @@ const urlParams = [
 		required: false,
 		type: 'date',
 		_parser: async (s) => new Date(s),
-		_checkFunction: async (d) => isValidDate(d),
+		_checkFunction: (d) => d instanceof Date ? isValidDate(d) : false,
 		_parseFailMessage: "Not a valid ISO date! It's in format YYYY-MM-DD!"
 	},
 	// @ts-ignore
@@ -20,8 +21,8 @@ const urlParams = [
 		name: 'end',
 		required: false,
 		type: 'date',
-		_parser: async (s) => new Date(s),
-		_checkFunction: async (d) => isValidDate(d),
+		_parser: (s) => new Date(s),
+		_checkFunction: (d) => d instanceof Date ? isValidDate(d) : false,
 		_parseFailMessage: "Not a valid ISO date! It's in format YYYY-MM-DD!"
 	},
 	{
@@ -29,13 +30,14 @@ const urlParams = [
 		required: true,
 		type: 'string',
 		_parser: getOrCreateUser,
-		_checkFunction: async (u) => u !== null,
+		_checkFunction: (u) => u !== null,
 		_parseFailMessage: 'This login does not exist!'
 	}
 ];
 
 /** @type {import('./$types').RequestHandler} */
-export async function GET({ url, params }) {
+export async function GET({ url, params, fetch, locals }) {
+	await handleCASLogin(url, fetch, locals)
 	url.searchParams.set('user', params.login);
 	let [errorOccured, value] = await checkError(url.searchParams, urlParams);
 	if (errorOccured) return json(value, { status: 400 });
