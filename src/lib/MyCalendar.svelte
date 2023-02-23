@@ -1,9 +1,7 @@
 <script context="module">
 	import Viewport from 'svelte-viewport-info';
-	import { convertDateToISODay } from '$lib/utils';
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
-	import { onMount } from 'svelte';
 </script>
 
 <script>
@@ -102,16 +100,13 @@
 	 * @param {KeyboardEvent} ev
 	 */
 	function handleKeydown(ev) {
+		console.log("called")
 		if (!loading) {
 			if (ev.key === 'ArrowLeft') window.document.querySelector('.ec-button.ec-prev')?.click();
 			if (ev.key === 'ArrowRight') window.document.querySelector('.ec-button.ec-next')?.click();
 			if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') removeTooltip({});
 		}
 	}
-
-	onMount(() => {
-		window.addEventListener('keydown', handleKeydown);
-	});
 	// options.datesSet = setEvents;
 	/**
 	 *
@@ -145,13 +140,15 @@
 	function removeTooltip(info) {
 		const { el } = info;
 		el?.removeEventListener('pointermove', trackTooltip);
-		tooltipRef.style.display = 'none';
+		if(tooltipRef)
+			tooltipRef.style.display = 'none';
 	}
 </script>
 
 {#if loading}
 	<div id="overlay">Page loading...</div>
 {/if}
+<svelte:window on:keydown={handleKeydown}></svelte:window>
 <div id="calendar">
 	<div class="tooltip" bind:this={tooltipRef}>
 		<div class="summary" />
