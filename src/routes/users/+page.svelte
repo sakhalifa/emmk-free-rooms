@@ -1,38 +1,10 @@
 <script>
-	let inputValue = '';
-	let action = `/users/${inputValue}`;
-	let submitted = false;
+	import { goto } from "$app/navigation";
+
+	/** @type import('./$types').PageData*/
+	export let data;
+
+	goto(`/users/${data.session.user.user}`)
 </script>
 
-{#if !submitted}
-	<form
-		method="get"
-		action="/users/{inputValue}"
-		on:submit={() => {
-			submitted = true;
-		}}
-	>
-		<input
-			type="text"
-			placeholder="Your CAS login, for example 'skhalifa'"
-			bind:value={inputValue}
-		/>
-		<button type="submit">Go to page</button>
-	</form>
-{:else}
-	<p>Page is loading...</p>
-{/if}
-
-<style>
-	form {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-	input {
-		margin: 0.5em;
-	}
-	button {
-		width: fit-content;
-	}
-</style>
+<p>Page is loading...</p>
