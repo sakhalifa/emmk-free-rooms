@@ -7,14 +7,25 @@ type User = {
 };
 
 class PlanningOfDay {
-	/**
-	 * All the events. They ARE NOT ORDERED!
-	 */
 	public events: ADEEvent[];
 	constructor(events: ADEEvent[]) {
 		this.events = events;
 	}
 }
 
-export type { User };
+type ADEUserAttributes = {
+	prenom: string;
+	mail: string;
+	diplome: string;
+	ecole: string;
+	nom: string;
+	profil: string;
+}
+
+type ADEUser  = {
+	user: string;
+	attributes: ADEUserAttributes;
+}
+
+export type { User, ADEUser };
 export { PlanningOfDay };

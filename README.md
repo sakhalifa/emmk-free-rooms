@@ -12,6 +12,7 @@ This repository uses a submodule. It is therefore really appreciated if you use 
 | CAS_PASSWORD      | The password used to authenticate to Bordeaux-INP CAS                                  |
 | CLEAN_FETCH_TIMER | When the worker will check which keys to delete from the fetch cache. In milliseconds. |
 | CLEAN_USERS_TIMER | When the worker will check which keys are null to delete from the user cache. In ms.   |
+| SESSION_SECRET_KEY| The secret key used to generate session keys |
 
 ## Installation
 
