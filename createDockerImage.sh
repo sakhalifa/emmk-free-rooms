@@ -30,12 +30,20 @@ fi
 if ! [[ $CLEAN_USERS_TIMER =~ $NUMREGEX ]] ; then
    echo "error: CLEAN_USERS_TIMER is not a number" >&2; exit 1
 fi
+read -p "CAS_SERVER: " CAS_SERVER
+if [ -z ${CAS_SERVER} ]; then
+	echo "error: please input a CAS server. For example, https://cas.bordeaux-inp.fr"
+fi
+read -p "CAS_PROXY: " CAS_PROXY
 
 cat << EOF > .env
 CAS_LOGIN=${CAS_LOGIN}
 CAS_PASSWORD=${CAS_PASSWORD}
 CLEAN_FETCH_TIMER=${CLEAN_FETCH_TIMER}
 CLEAN_USERS_TIMER=${CLEAN_USERS_TIMER}
+CAS_SERVER=${CAS_SERVER}
+CAS_PROXY=${CAS_PROXY}
+SESSION_SECRET_KEY=$(cat /dev/urandom | tr -cd '[:graph:]' | head -c 32)
 EOF
 
 docker build -t="$1" .

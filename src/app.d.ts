@@ -1,7 +1,5 @@
 /// <reference types="@sveltejs/kit" />
 
-
-
 interface SessionData {
 	user: import('./lib/types.d').ADEUser;
 }

@@ -1,17 +1,26 @@
 <h1>Changelog</h1>
 <h2>0.1.3, Le fléau</h2>
 <ul>
-	<li>- Le site est désormais lock sous le CAS. Et oui, c'est dommage, mais soit c'est ça, soit je suis techniquement hors charte :(.</li>
-	<li>- Une fois authentifié, vous avez accès au site </li>
+	<li>
+		- Le site est désormais lock sous le CAS. Et oui, c'est dommage, mais soit c'est ça, soit je
+		suis techniquement hors charte :(.
+	</li>
+	<li>- Une fois authentifié, vous avez accès au site</li>
 </ul>
 <h2>0.1.2.1, Thibaut stp...</h2>
 <ul>
-	<li>- Rajout d'un petit "Loading..." quand on utilise le calendrier, car certains <em>malotrus</em> ont décidé de spam 💀</li>
+	<li>
+		- Rajout d'un petit "Loading..." quand on utilise le calendrier, car certains <em>malotrus</em> ont
+		décidé de spam 💀
+	</li>
 </ul>
 <h2>0.1.2, Maintenabilité + Dépréciation</h2>
 <ul>
 	<li>- Un peu de refactoring pour le calendrier, pour quelque chose d'utile plus tard 👀</li>
-	<li>- Résolution d'un bug qui faisait en sorte que des fois, quand on appuyait sur les flèches avec le clavier, ça le faisait 2x</li>
+	<li>
+		- Résolution d'un bug qui faisait en sorte que des fois, quand on appuyait sur les flèches avec
+		le clavier, ça le faisait 2x
+	</li>
 	<li>- Dépréciation de l'API pour les salles libres. L'API a changé lol.</li>
 	<li>- Enfin une "délimitation" header main footer</li>
 </ul>
@@ -68,7 +77,7 @@
 		background-clip: text;
 		-webkit-background-clip: text;
 	}
-	
+
 	table,
 	th,
 	td {

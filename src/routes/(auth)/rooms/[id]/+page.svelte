@@ -4,7 +4,7 @@
 	/** @type import('./$types').PageData*/
 	export let data;
 
-	function getUrl(){}
+	function getUrl() {}
 </script>
 
 <h1>{data.room.name}</h1>

@@ -20,12 +20,12 @@ type ADEUserAttributes = {
 	ecole: string;
 	nom: string;
 	profil: string;
-}
+};
 
-type ADEUser  = {
+type ADEUser = {
 	user: string;
 	attributes: ADEUserAttributes;
-}
+};
 
 export type { User, ADEUser };
 export { PlanningOfDay };

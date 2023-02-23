@@ -9,15 +9,15 @@
 	export let data;
 
 	/**
-	 * 
+	 *
 	 * @param {Date} start
 	 * @param {Date} end
 	 */
-	function getUrl(start, end){
-		return `/api/users/${data.user.login}?start=${convertDateToISODay(start)}&end=${convertDateToISODay(end)}`
+	function getUrl(start, end) {
+		return `/api/users/${data.user.login}?start=${convertDateToISODay(
+			start
+		)}&end=${convertDateToISODay(end)}`;
 	}
-
-	
 </script>
 
 <MyCalendar {getUrl} />

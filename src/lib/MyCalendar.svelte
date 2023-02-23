@@ -100,7 +100,7 @@
 	 * @param {KeyboardEvent} ev
 	 */
 	function handleKeydown(ev) {
-		console.log("called")
+		console.log('called');
 		if (!loading) {
 			if (ev.key === 'ArrowLeft') window.document.querySelector('.ec-button.ec-prev')?.click();
 			if (ev.key === 'ArrowRight') window.document.querySelector('.ec-button.ec-next')?.click();
@@ -129,7 +129,9 @@
 			.slice(1)
 			.join('<br>')}`;
 		Object.assign(tooltipRef.style, activeTooltipStyle);
-		tooltipRef.children[0].style.backgroundColor = info.event.backgroundColor ? info.event.backgroundColor : "#039be5";
+		tooltipRef.children[0].style.backgroundColor = info.event.backgroundColor
+			? info.event.backgroundColor
+			: '#039be5';
 		el.addEventListener('pointermove', trackTooltip);
 	}
 
@@ -140,15 +142,14 @@
 	function removeTooltip(info) {
 		const { el } = info;
 		el?.removeEventListener('pointermove', trackTooltip);
-		if(tooltipRef)
-			tooltipRef.style.display = 'none';
+		if (tooltipRef) tooltipRef.style.display = 'none';
 	}
 </script>
 
 {#if loading}
 	<div id="overlay">Page loading...</div>
 {/if}
-<svelte:window on:keydown={handleKeydown}></svelte:window>
+<svelte:window on:keydown={handleKeydown} />
 <div id="calendar">
 	<div class="tooltip" bind:this={tooltipRef}>
 		<div class="summary" />

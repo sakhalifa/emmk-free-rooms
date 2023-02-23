@@ -13,7 +13,7 @@ const urlParams = [
 		required: false,
 		type: 'date',
 		_parser: async (s) => new Date(s),
-		_checkFunction: (d) => d instanceof Date ? isValidDate(d) : false,
+		_checkFunction: (d) => (d instanceof Date ? isValidDate(d) : false),
 		_parseFailMessage: "Not a valid ISO date! It's in format YYYY-MM-DD!"
 	},
 	// @ts-ignore
@@ -22,7 +22,7 @@ const urlParams = [
 		required: false,
 		type: 'date',
 		_parser: (s) => new Date(s),
-		_checkFunction: (d) => d instanceof Date ? isValidDate(d) : false,
+		_checkFunction: (d) => (d instanceof Date ? isValidDate(d) : false),
 		_parseFailMessage: "Not a valid ISO date! It's in format YYYY-MM-DD!"
 	},
 	{
@@ -37,7 +37,7 @@ const urlParams = [
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url, params, fetch, locals }) {
-	await handleCASLogin(url, fetch, locals)
+	await handleCASLogin(url, fetch, locals);
 	url.searchParams.set('user', params.login);
 	let [errorOccured, value] = await checkError(url.searchParams, urlParams);
 	if (errorOccured) return json(value, { status: 400 });
