@@ -7,7 +7,6 @@ export async function load({ params }) {
 	if (!Number.isInteger(idNum)) throw error(400, 'Invalid id! Must be an integer.');
 	const rooms = await getRooms();
 	let room = rooms.find((r) => r.id === idNum);
-	console.log();
 	if (room === undefined) throw error(400, `Cannot find room with id ${params.id}`);
 	return {
 		room
