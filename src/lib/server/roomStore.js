@@ -45,7 +45,6 @@ async function getRooms() {
  * @param {import('./ADE-client/src/types').Room} room
  * @param {Date} start
  * @param {Date} end
- * @returns {Promise<PlanningOfDay[]>}
  */
 async function getPlanningForRoom(room, start, end) {
 	const MS_IN_SEC = 1000;
@@ -71,7 +70,6 @@ async function getPlanningForRoom(room, start, end) {
 		);
 	}
 	let vals = await Promise.all(promises);
-
 	return vals;
 }
 export { getRooms, refreshRooms, getPlanningForRoom };

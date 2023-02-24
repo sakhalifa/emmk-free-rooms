@@ -65,24 +65,34 @@ async function getFreeRooms(start, end, rooms) {
 	 * @type import('$lib/server/ADE-client/src/types').Room[]
 	 */
 	const freeRooms = [];
-	for (const r of rooms) {
-		console.log(`fetching ${r.name}`);
-
-		// @ts-ignore
-		const planning = (await getPlanningForRoom(r, start, end))[0];
-
-		let free = true;
-		for (const ev of planning.events) {
-			if (dateRangeOverlaps(start, end, ev.start, ev.end)) {
-				free = false;
-				break;
+	/**
+	 * 
+	 * @param {import('$lib/server/ADE-client/src/types').Room} r 
+	 */
+	async function addToFreeRooms(r){
+		const plannings = await getPlanningForRoom(r, start, end)
+		for (const planning of plannings) {
+			let free = true;
+			for (const ev of planning.events) {
+				if (dateRangeOverlaps(start, end, ev.start, ev.end)) {
+					free = false;
+					break;
+				}
+			}
+			if (free) {
+				freeRooms.push(r);
 			}
 		}
-		if (free) {
-			freeRooms.push(r);
-		}
 	}
-
+	
+	/** @type  {Promise<import('$lib/types.d').PlanningOfDay[]>[]}*/
+	const promises = [];
+	for (const r of rooms) {
+		// @ts-ignore
+		promises.push(addToFreeRooms(r))
+		// 
+	}
+	await Promise.all(promises)
 	return json(freeRooms);
 }
 
