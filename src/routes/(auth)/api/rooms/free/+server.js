@@ -1,4 +1,4 @@
-import { checkError, parseRegex, dateRangeOverlaps, isValidDate } from '$lib/server/utils';
+import { checkError, parseRegex, dateRangeOverlaps, isValidDate, removePrivateParameters } from '$lib/server/utils';
 import { json } from '@sveltejs/kit';
 import { getPlanningForRoom, getRooms } from '$lib/server/roomStore';
 
@@ -106,6 +106,8 @@ export async function GET({ url }) {
 	 */
 	let { start, end, searchRegex } = value;
 
+	if(start >= end)
+		return json({ status: "INVALID PARAMETERS", error: "Cannot have start >= end!", params: removePrivateParameters(params) })
 	const rooms = (await getRooms()).filter((r) => (searchRegex ? searchRegex.test(r.name) : true));
 	return await getFreeRooms(start, end, rooms);
 }
