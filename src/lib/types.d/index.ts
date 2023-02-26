@@ -27,5 +27,12 @@ type ADEUser = {
 	attributes: ADEUserAttributes;
 };
 
-export type { User, ADEUser };
+type Room = {
+    id: number,
+    name: string,
+    isFolder: boolean,
+    parent: number | null
+};
+
+export type { User, ADEUser, Room };
 export { PlanningOfDay };
