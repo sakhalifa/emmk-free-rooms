@@ -1,6 +1,7 @@
 <script context="module">
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
+	import { onMount } from 'svelte';
 </script>
 
 <script>
@@ -65,6 +66,14 @@
 					}
 				}
 				loading = false;
+				let el = document.querySelector('.ec-toolbar > *:nth-child(2)');
+				if (el !== null && el instanceof HTMLElement) {
+					el.innerText = `${events.reduce((prev, cur) => {
+						return prev + new Date(cur.end.getTime() - cur.start.getTime()).getUTCHours();
+					}, 0)}h${events.reduce((prev, cur) => {
+						return (prev + new Date(cur.end.getTime() - cur.start.getTime()).getUTCMinutes()) % 60;
+					}, 0)}m de cours`;
+				}
 				successCallback(events);
 			});
 	}
@@ -111,7 +120,6 @@
 	 * @param {KeyboardEvent} ev
 	 */
 	function handleKeydown(ev) {
-		console.log('called');
 		if (!loading) {
 			if (ev.key === 'ArrowLeft') window.document.querySelector('.ec-button.ec-prev')?.click();
 			if (ev.key === 'ArrowRight') window.document.querySelector('.ec-button.ec-next')?.click();
