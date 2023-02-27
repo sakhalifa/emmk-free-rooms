@@ -94,14 +94,14 @@
 	{:else}
 		<div class="content">
 			<div style="background-color: {selectedCategory.color};" class="category">
-				{selectedCategory.name}
+				{selectedCategory.name}<br>{selectedCategory.rooms.length}
 			</div>
 			{#if selectedFloor === undefined && selectedCategory.name !== 'AMPHI'}
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<div class="grid">
-					<div><div class="floor" on:click={() => handleFloorSelect(0)}>RDC</div></div>
-					<div><div class="floor" on:click={() => handleFloorSelect(1)}>1er étage</div></div>
-					<div><div class="floor" on:click={() => handleFloorSelect(2)}>2e étage</div></div>
+					<div><div class="floor" on:click={() => handleFloorSelect(0)}>RDC<br>{filterByFloor(selectedCategory, 0).length}</div></div>
+					<div><div class="floor" on:click={() => handleFloorSelect(1)}>1er étage<br>{filterByFloor(selectedCategory, 1).length}</div></div>
+					<div><div class="floor" on:click={() => handleFloorSelect(2)}>2e étage<br>{filterByFloor(selectedCategory, 2).length}</div></div>
 				</div>
 			{:else}
 				<ShowRooms selectedRooms={filterByFloor(selectedCategory, selectedFloor)} />

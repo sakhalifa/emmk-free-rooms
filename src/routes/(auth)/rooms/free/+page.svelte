@@ -1,6 +1,7 @@
 <script>
-	import FreeRoomsPage from './FreeRoomsPage.svelte';
-
+	import { browser } from '$app/environment';
+	import FreeRoomsPageComputer from './FreeRoomsPageComputer.svelte';
+	import FreeRoomsPageMobile from './FreeRoomsPageMobile.svelte';
 	/** @type {import('./$types').ActionData} */
 	export let form;
 
@@ -10,6 +11,23 @@
 	/** @type {HTMLInputElement}*/
 	let secondInputRef;
 
+	let component = FreeRoomsPageComputer;
+	if (browser) {
+		const mql = window.matchMedia('(max-width: 600px)');
+		if (mql.matches) {
+			component = FreeRoomsPageMobile;
+		} else {
+			component = FreeRoomsPageComputer;
+		}
+		mql.addEventListener('change', (e) => {
+			const mobileView = e.matches;
+			if (mobileView) {
+				component = FreeRoomsPageMobile;
+			} else {
+				component = FreeRoomsPageComputer;
+			}
+		});
+	}
 
 	/**
 	 *
@@ -20,12 +38,10 @@
 		const otherInput = myInput === firstInputRef ? secondInputRef : firstInputRef;
 
 		const myDate = myInput.valueAsDate;
-		if(myDate === null) return;
+		if (myDate === null) return;
 		const otherDate = otherInput.valueAsDate;
-		if(otherDate === null)
-			otherInput.value = myInput.value;
-		otherInput.value = myInput.value.split("T")[0] + "T" + otherInput.value.split("T")[1];
-		
+		if (otherDate === null) otherInput.value = myInput.value;
+		otherInput.value = myInput.value.split('T')[0] + 'T' + otherInput.value.split('T')[1];
 	}
 </script>
 
@@ -41,7 +57,7 @@
 			bind:this={firstInputRef}
 			type="datetime-local"
 			name="firstDate"
-			value="{new Date().toISOString().split(":").splice(0,2).join(":")}"
+			value={new Date().toISOString().split(':').splice(0, 2).join(':')}
 			required
 			on:change={syncInputs}
 		/>
@@ -49,14 +65,14 @@
 			bind:this={secondInputRef}
 			type="datetime-local"
 			name="secondDate"
-			value="{new Date().toISOString().split(":").splice(0,2).join(":")}"
+			value={new Date().toISOString().split(':').splice(0, 2).join(':')}
 			required
 			on:change={syncInputs}
 		/>
 		<button type="submit">Submit</button>
 	</form>
 {:else}
-	<FreeRoomsPage rooms={form.rooms} />
+	<svelte:component this={component} rooms={form.rooms} />
 {/if}
 
 <style>

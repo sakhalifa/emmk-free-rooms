@@ -1,4 +1,4 @@
-import waitUntil from 'async-wait-until';
+import { waitUntil, WAIT_FOREVER } from 'async-wait-until';
 import { CLEAN_FETCH_TIMER } from '$env/static/private';
 
 type FetcherOptions = {
@@ -63,6 +63,13 @@ async function getOrRevalidate<T>(
 	}
 	const value = cache.get(key)!;
 	if (_isExpired(value)) await _update(key);
+	await waitUntil(() => {
+		const val = cache.get(key)
+		if(!val){
+			return true;
+		}
+		return !val.isFetching;
+	}, { timeout: 20 * 1000 })
 	return value.data;
 }
 
