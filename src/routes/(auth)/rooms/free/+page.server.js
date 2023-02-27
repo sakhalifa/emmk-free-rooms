@@ -39,7 +39,7 @@ export const actions = {
 			return { error: "Date de fin manquante!" };
 		const firstDate = dateMin(new Date(firstDateStr.toString()), new Date(secondDateStr.toString()))
 		const lastDate = dateMax(new Date(firstDateStr.toString()), new Date(secondDateStr.toString()))
-		if (firstDate === lastDate)
+		if (firstDate.getTime() === lastDate.getTime())
 			return { error: "Les 2 dates doivent être différentes!" }
 		if (convertDateToISODay(firstDate) !== convertDateToISODay(lastDate))
 			return { error: "Les 2 dates doivent être exactement sur le même jour!" };
