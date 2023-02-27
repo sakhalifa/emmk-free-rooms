@@ -1,8 +1,16 @@
 <h1>Changelog</h1>
+<h2>1.0.0, LA <span class="underscore bold">PREMIERE <span class="rainbow">RELEASE</span></h2>
+<ul>
+	<li>Le module "Salles Libres" est enfin disponible!!!!!!!!!!!!!!!!!</li>
+	<li>Vous pouvez enfin savoir quelles salles sont libres entres 2 heures le même jour!!!</li>
+	<li>Normalement, y'aura plus trop d'updates après ça SAUF bug fix, certains trucs encore en TODO, mais voilà quoi</li>
+	<li>Enjoy</li>
+	<li><img src="https://media.tenor.com/v3DAIe73r00AAAAM/happy-cat-smile-cat.gif" alt="chat joyeux"/></li>
+</ul>
 <h2>0.1.3, Le fléau</h2>
 <ul>
 	<li>
-		- Le site est désormais lock sous le CAS. Et oui, c'est dommage, mais soit c'est ça, soit je
+		Le site est désormais lock sous le CAS. Et oui, c'est dommage, mais soit c'est ça, soit je
 		suis techniquement hors charte :(.
 	</li>
 	<li>- Une fois authentifié, vous avez accès au site</li>
@@ -10,7 +18,7 @@
 <h2>0.1.2.1, Thibaut stp...</h2>
 <ul>
 	<li>
-		- Rajout d'un petit "Loading..." quand on utilise le calendrier, car certains <em>malotrus</em> ont
+		Rajout d'un petit "Loading..." quand on utilise le calendrier, car certains <em>malotrus</em> ont
 		décidé de spam 💀
 	</li>
 </ul>
@@ -18,11 +26,11 @@
 <ul>
 	<li>- Un peu de refactoring pour le calendrier, pour quelque chose d'utile plus tard 👀</li>
 	<li>
-		- Résolution d'un bug qui faisait en sorte que des fois, quand on appuyait sur les flèches avec
+		Résolution d'un bug qui faisait en sorte que des fois, quand on appuyait sur les flèches avec
 		le clavier, ça le faisait 2x
 	</li>
-	<li>- Dépréciation de l'API pour les salles libres. L'API a changé lol.</li>
-	<li>- Enfin une "délimitation" header main footer</li>
+	<li>Dépréciation de l'API pour les salles libres. L'API a changé lol.</li>
+	<li>Enfin une "délimitation" header main footer</li>
 </ul>
 <h2>0.1.1, <span class="rainbow">C O U L E U R S</span></h2>
 <ul>
@@ -71,6 +79,12 @@
 </ul>
 
 <style>
+	.underscore{
+		text-decoration: underline;
+	}
+	.bold{
+		font-weight: bold;
+	}
 	.rainbow {
 		color: transparent;
 		background: linear-gradient(90deg, red, orange, yellow, green, blue, purple);

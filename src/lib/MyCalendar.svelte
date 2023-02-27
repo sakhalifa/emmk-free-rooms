@@ -19,6 +19,7 @@
 				return 'lime';
 			case 'TD':
 				return 'cyan';
+			case 'SCOLARITE':
 			case 'ENSEIGNANTS':
 				return 'red';
 			case 'TP':
