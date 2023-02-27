@@ -1,7 +1,6 @@
 <script context="module">
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
-	import { onMount } from 'svelte';
 </script>
 
 <script>
@@ -37,11 +36,8 @@
 	function fetchEvents(fetchInfo, successCallback) {
 		let { start, end } = fetchInfo;
 		start = new Date(start);
+		start.setDate(start.getDate() + 1);
 		end = new Date(end);
-		if (start.getDay() === 0) {
-			start.setDate(start.getDate() + 1);
-			end.setDate(end.getDate() + 1);
-		}
 		loading = true;
 		fetch(getUrl(start, end))
 			.then((r) => r.json())
@@ -68,11 +64,25 @@
 				loading = false;
 				let el = document.querySelector('.ec-toolbar > *:nth-child(2)');
 				if (el !== null && el instanceof HTMLElement) {
-					el.innerText = `${events.reduce((prev, cur) => {
-						return prev + new Date(cur.end.getTime() - cur.start.getTime()).getUTCHours();
-					}, 0)}h${events.reduce((prev, cur) => {
-						return (prev + new Date(cur.end.getTime() - cur.start.getTime()).getUTCMinutes()) % 60;
-					}, 0)}m de cours`;
+					const [hours, minutes] = plannings.reduce(
+						(prev, cur) => {
+							const [h, m] = prev;
+							const [dh, dm] = cur.events.reduce(
+								(p, c) => {
+									let [oldH, oldM] = p;
+									const dt = new Date(new Date(c.end).getTime() - new Date(c.start).getTime());
+									oldM += dt.getUTCMinutes();
+									oldH += dt.getUTCHours() + Math.floor(oldM / 60);
+									return [oldH, oldM % 60];
+								},
+								[0, 0]
+							);
+
+							return [h + dh + Math.floor(dm / 60), dm % 60];
+						},
+						[0, 0]
+					);
+					el.innerText = `${hours}h` + (minutes ? `${minutes}m` : "");
 				}
 				successCallback(events);
 			});

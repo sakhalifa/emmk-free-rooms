@@ -4,8 +4,7 @@
 
 <p>
 	En gros, c'est une sorte de "substitut" à ADE. Vous pouvez cliquer sur les liens ci dessus pour
-	avoir accès à 2 outils. <span style="font-size: xx-small;"
-		>Bon en fait qu'un seul pour l'instant...</span
+	avoir accès à 2 outils.
 	>
 </p>
 
