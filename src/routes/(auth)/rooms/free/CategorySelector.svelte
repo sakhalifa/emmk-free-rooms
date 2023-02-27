@@ -14,7 +14,8 @@
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div style="background-color: {category.color}" class="column" on:click={() => handleCategorySelect(category)}>
 			<div class="title">
-				{category.name}
+				<span>{category.name}</span>
+				<span>{category.rooms.length}</span>
 			</div>
 		</div>
 	{/each}
@@ -36,5 +37,11 @@
 	.column:hover {
 		border: 2px black solid;
 		cursor: pointer;
+	}
+	.title{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
 	}
 </style>

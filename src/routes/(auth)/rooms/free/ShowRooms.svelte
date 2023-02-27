@@ -3,11 +3,13 @@
 	export let selectedRooms;
 </script>
 
-<ul class="rooms">
-	{#each selectedRooms as room}
-		<li><a href="/rooms/{room.id}" target="_blank" rel="noreferrer">{room.name}</a></li>
-	{/each}
-</ul>
+<div class="rooms">
+	<ul>
+		{#each selectedRooms as room}
+			<li><a href="/rooms/{room.id}" target="_blank" rel="noreferrer">{room.name}</a></li>
+		{/each}
+	</ul>
+</div>
 
 <style>
 	a {
@@ -18,7 +20,7 @@
 		cursor: pointer;
 		text-decoration: underline;
 	}
-	ul {
+	.rooms {
 		display: flex;
 		flex-direction: column;
 		align-items: center;

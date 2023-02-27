@@ -94,14 +94,26 @@
 	{:else}
 		<div class="content">
 			<div style="background-color: {selectedCategory.color};" class="category">
-				{selectedCategory.name}<br>{selectedCategory.rooms.length}
+				{selectedCategory.name}<br />{selectedCategory.rooms.length}
 			</div>
 			{#if selectedFloor === undefined && selectedCategory.name !== 'AMPHI'}
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<div class="grid">
-					<div><div class="floor" on:click={() => handleFloorSelect(0)}>RDC<br>{filterByFloor(selectedCategory, 0).length}</div></div>
-					<div><div class="floor" on:click={() => handleFloorSelect(1)}>1er étage<br>{filterByFloor(selectedCategory, 1).length}</div></div>
-					<div><div class="floor" on:click={() => handleFloorSelect(2)}>2e étage<br>{filterByFloor(selectedCategory, 2).length}</div></div>
+					<div>
+						<div class="floor" on:click={() => handleFloorSelect(0)}>
+							<span>RDC</span><span>{filterByFloor(selectedCategory, 0).length}</span>
+						</div>
+					</div>
+					<div>
+						<div class="floor" on:click={() => handleFloorSelect(1)}>
+							<span>1er étage</span><span>{filterByFloor(selectedCategory, 1).length}</span>
+						</div>
+					</div>
+					<div>
+						<div class="floor" on:click={() => handleFloorSelect(2)}>
+							<span>2e étage</span><span>{filterByFloor(selectedCategory, 2).length}</span>
+						</div>
+					</div>
 				</div>
 			{:else}
 				<ShowRooms selectedRooms={filterByFloor(selectedCategory, selectedFloor)} />
@@ -146,6 +158,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		flex-direction: column;
 		width: 100%;
 		height: 100%;
 	}
