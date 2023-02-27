@@ -66,7 +66,7 @@
 
 <div id="maingrid">
 	{#each categories as category}
-		<div id="subgrid">
+		<div class="subgrid">
 			<div style="background-color: {category.color}" id="title">{category.name}</div>
 			<div class="floor">
 				<ul>
@@ -105,7 +105,7 @@
 		text-align: center;
 	}
 
-	#subgrid {
+	.subgrid {
 		height: 100%;
 		display: grid;
 		grid-template-rows: min-content repeat(3, 1fr);

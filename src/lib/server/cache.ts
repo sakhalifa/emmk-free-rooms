@@ -1,6 +1,5 @@
-import pkg from 'async-wait-until'
-const { waitUntil } = pkg;
 import { CLEAN_FETCH_TIMER } from '$env/static/private';
+import waitUntil from 'async-wait-until';
 
 type FetcherOptions = {
 	key: string;
