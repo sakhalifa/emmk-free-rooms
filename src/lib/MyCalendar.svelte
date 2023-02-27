@@ -1,5 +1,4 @@
 <script context="module">
-	import Viewport from 'svelte-viewport-info';
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
 </script>
@@ -82,8 +81,9 @@
 	};
 
 	let plugins = [TimeGrid];
+	const mql = window.matchMedia('(max-width: 600px)');
 	let options = {
-		view: (Viewport?.Width ?? 0) < 500 ? 'timeGridDay' : 'timeGridWeek',
+		view: mql.matches ? 'timeGridDay' : 'timeGridWeek',
 		allDaySlot: false,
 		editable: false,
 		width: '100%',
@@ -95,6 +95,16 @@
 		eventMouseLeave: removeTooltip
 	};
 
+	/** @type {{setOption: (_: string, d: any) => void} | undefined} */
+	let ec;
+	mql.addEventListener('change', (e) => {
+		const mobileView = e.matches;
+		if (mobileView) {
+			ec?.setOption('view', 'timeGridDay');
+		} else {
+			ec?.setOption('view', 'timeGridWeek');
+		}
+	});
 	/**
 	 *
 	 * @param {KeyboardEvent} ev
@@ -155,7 +165,7 @@
 		<div class="summary" />
 		<div class="content" />
 	</div>
-	<Calendar {options} {plugins} />
+	<Calendar {options} {plugins} bind:this={ec} />
 </div>
 
 <style>
