@@ -57,7 +57,11 @@
 			bind:this={firstInputRef}
 			type="datetime-local"
 			name="firstDate"
-			value={new Date().toISOString().split(':').splice(0, 2).join(':')}
+			value={(() => {
+				let d = new Date()
+				d.setUTCHours(d.getUTCHours(), 0, 0, 0)
+				return d
+			})().toISOString().split(":").splice(0,2).join(':')}
 			required
 			on:change={syncInputs}
 		/>
@@ -65,7 +69,11 @@
 			bind:this={secondInputRef}
 			type="datetime-local"
 			name="secondDate"
-			value={new Date().toISOString().split(':').splice(0, 2).join(':')}
+			value={(() => {
+				let d = new Date()
+				d.setUTCHours(d.getUTCHours()+2, 0, 0, 0)
+				return d
+			})().toISOString().split(":").splice(0,2).join(':')}
 			required
 			on:change={syncInputs}
 		/>
