@@ -68,27 +68,37 @@
 	{#each categories as category}
 		<div class="subgrid">
 			<div style="background-color: {category.color}" id="title">{category.name}</div>
-			<div class="floor">
-				<ul>
-					{#each filterByFloor(category, 0) as room}
-					<li><a href="/rooms/{room.id}" target="_blank" rel="noreferrer">{room.name}</a></li>
-					{/each}
-				</ul>
-			</div>
-			<div class="floor">
-				<ul>
-					{#each filterByFloor(category, 1) as room}
-					<li><a href="/rooms/{room.id}" target="_blank" rel="noreferrer">{room.name}</a></li>
-					{/each}
-				</ul>
-			</div>
-			<div class="floor">
-				<ul>
-					{#each filterByFloor(category, 2) as room}
-					<li><a href="/rooms/{room.id}" target="_blank" rel="noreferrer">{room.name}</a></li>
-					{/each}
-				</ul>
-			</div>
+			{#if category.name === 'AMPHI'}
+				<div class="big floor">
+					<ul>
+						{#each filterByFloor(category, 0) as room}
+							<li><a href="/rooms/{room.id}" target="_blank" rel="noreferrer">{room.name}</a></li>
+						{/each}
+					</ul>
+				</div>
+			{:else}
+				<div class="floor">
+					<ul>
+						{#each filterByFloor(category, 0) as room}
+							<li><a href="/rooms/{room.id}" target="_blank" rel="noreferrer">{room.name}</a></li>
+						{/each}
+					</ul>
+				</div>
+				<div class="floor">
+					<ul>
+						{#each filterByFloor(category, 1) as room}
+							<li><a href="/rooms/{room.id}" target="_blank" rel="noreferrer">{room.name}</a></li>
+						{/each}
+					</ul>
+				</div>
+				<div class="floor">
+					<ul>
+						{#each filterByFloor(category, 2) as room}
+							<li><a href="/rooms/{room.id}" target="_blank" rel="noreferrer">{room.name}</a></li>
+						{/each}
+					</ul>
+				</div>
+			{/if}
 		</div>
 	{/each}
 </div>
@@ -103,6 +113,10 @@
 
 	#title {
 		text-align: center;
+	}
+
+	.big{
+		grid-row-end: span 3;
 	}
 
 	.subgrid {
