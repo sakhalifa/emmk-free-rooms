@@ -56,7 +56,7 @@
 	}
 
 	#main {
-		height: 99%;
+		height: 100%;
 		display: flex;
 		flex-direction: column;
 	}
