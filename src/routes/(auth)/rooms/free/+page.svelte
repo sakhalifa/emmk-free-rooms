@@ -1,5 +1,6 @@
 <script>
 	import { browser } from '$app/environment';
+	import { enhance } from '$app/forms';
 	import FreeRoomsPageComputer from './FreeRoomsPageComputer.svelte';
 	import FreeRoomsPageMobile from './FreeRoomsPageMobile.svelte';
 	/** @type {import('./$types').ActionData} */
@@ -29,6 +30,8 @@
 		});
 	}
 
+	let loading = false;
+
 	/**
 	 *
 	 * @param {Event & {currentTarget: EventTarget & HTMLInputElement}} ev
@@ -51,34 +54,55 @@
 	</div>
 {/if}
 {#if !form?.rooms}
-	<form method="post">
-		<input type="text" placeholder="Room name regex" name="regex" />
-		<input
-			bind:this={firstInputRef}
-			type="datetime-local"
-			name="firstDate"
-			value={(() => {
-				let d = new Date()
-				d.setUTCHours(d.getUTCHours(), 0, 0, 0)
-				return d
-			})().toISOString().split(":").splice(0,2).join(':')}
-			required
-			on:change={syncInputs}
-		/>
-		<input
-			bind:this={secondInputRef}
-			type="datetime-local"
-			name="secondDate"
-			value={(() => {
-				let d = new Date()
-				d.setUTCHours(d.getUTCHours()+2, 0, 0, 0)
-				return d
-			})().toISOString().split(":").splice(0,2).join(':')}
-			required
-			on:change={syncInputs}
-		/>
-		<button type="submit">Submit</button>
-	</form>
+	{#if loading}
+		<div id="overlay">Page loading...</div>
+	{:else}
+		<form
+			method="post"
+			use:enhance={() => {
+				loading = true;
+				return ({ update }) => {
+					loading = false;
+					update();
+				};
+			}}
+		>
+			<input type="text" placeholder="Room name regex" name="regex" />
+			<input
+				bind:this={firstInputRef}
+				type="datetime-local"
+				name="firstDate"
+				value={(() => {
+					let d = new Date();
+					d.setUTCHours(d.getUTCHours(), 0, 0, 0);
+					return d;
+				})()
+					.toISOString()
+					.split(':')
+					.splice(0, 2)
+					.join(':')}
+				required
+				on:change={syncInputs}
+			/>
+			<input
+				bind:this={secondInputRef}
+				type="datetime-local"
+				name="secondDate"
+				value={(() => {
+					let d = new Date();
+					d.setUTCHours(d.getUTCHours() + 2, 0, 0, 0);
+					return d;
+				})()
+					.toISOString()
+					.split(':')
+					.splice(0, 2)
+					.join(':')}
+				required
+				on:change={syncInputs}
+			/>
+			<button type="submit">Submit</button>
+		</form>
+	{/if}
 {:else}
 	<svelte:component this={component} rooms={form.rooms} />
 {/if}
@@ -86,5 +110,17 @@
 <style>
 	.error {
 		color: red;
+	}
+	#overlay {
+		margin: 0;
+		top: 0;
+		width: 100vw;
+		height: 100vh;
+		position: absolute;
+		background-color: rgba(211, 211, 211, 0.5);
+		z-index: 999;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>
