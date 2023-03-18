@@ -2,7 +2,7 @@
 <h2>1.0.1, QoL update</h2>
 <ul>
 	<li>Le module "Salles libres" affiche enfin quand il récupère les données. <span style="font-size: x-small;">Oui, c'est tard...</span></li>
-	<li></li>
+	<li>Stub d'une fonctionnalité future.</li>
 </ul>
 <h2>1.0.0, LA <span class="underscore bold">PREMIERE <span class="rainbow">RELEASE</span></h2>
 <ul>
