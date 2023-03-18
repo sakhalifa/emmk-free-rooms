@@ -41,7 +41,7 @@ type CalendarEvent = {
 	titleHTML: string,
 	color?: string,
 	extendedProps?: any
-	resourceIds?: string
+	resourceIds?: string[]
 }
 
 export type { User, ADEUser, Room, CalendarEvent };

@@ -1,6 +1,7 @@
 <script context="module">
 	import Calendar from '@event-calendar/core';
 	import TimeGrid from '@event-calendar/time-grid';
+	import ResourceTimeGrid from '@event-calendar/resource-time-grid';
 </script>
 
 <script>
@@ -8,6 +9,11 @@
 
 	/** @type {(s: Date, e: Date) => Promise<import('$lib/types.d').CalendarEvent[]>}*/
 	export let fetcher;
+
+	/** @type {{id: string, title: string}[] | undefined}*/
+	export let resources;
+
+	resources ??= [];
 
 	/**
 	 *
@@ -54,7 +60,7 @@
 		zIndex: 999
 	};
 
-	let plugins = [TimeGrid];
+	let plugins = [TimeGrid, ResourceTimeGrid];
 	const mql = window.matchMedia('(max-width: 600px)');
 	let options = {
 		view: mql.matches ? 'timeGridDay' : 'timeGridWeek',
@@ -66,10 +72,12 @@
 		slotMaxTime: '21:00:00',
 		eventSources: [{ events: fetchEvents }],
 		eventMouseEnter: showTooltip,
-		eventMouseLeave: removeTooltip
+		eventMouseLeave: removeTooltip,
+		resources: resources,
+		headerToolbar: { start: 'title', center: '', end: 'today prev,next' }
 	};
 
-	/** @type {{setOption: (_: string, d: any) => void} | undefined} */
+	/** @type {{setOption: (_: string, d: any) => void, getOption: (_: string) => any | undefined} | undefined} */
 	let ec;
 	mql.addEventListener('change', (e) => {
 		const mobileView = e.matches;
@@ -130,12 +138,23 @@
 		el?.removeEventListener('pointermove', trackTooltip);
 		if (tooltipRef) tooltipRef.style.display = 'none';
 	}
+
+	function toggleView() {
+		if (ec?.getOption('view') !== 'resourceTimeGridWeek')
+			ec?.setOption('view', 'resourceTimeGridWeek');
+		else ec?.setOption('view', 'timeGridWeek');
+	}
 </script>
 
 {#if loading}
 	<div id="overlay">Page loading...</div>
 {/if}
 <svelte:window on:keydown={handleKeydown} />
+{#if resources !== undefined && resources.length > 1}
+	<div style="width: 100vw; margin: 1em">
+		<button class="ec-button" on:click={toggleView}>Toggle Resource View</button>
+	</div>
+{/if}
 <div id="calendar">
 	<div class="tooltip" bind:this={tooltipRef}>
 		<div class="summary" />
