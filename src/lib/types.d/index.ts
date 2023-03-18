@@ -28,11 +28,21 @@ type ADEUser = {
 };
 
 type Room = {
-    id: number,
-    name: string,
-    isFolder: boolean,
-    parent: number | null
+	id: number,
+	name: string,
+	isFolder: boolean,
+	parent: number | null
 };
 
-export type { User, ADEUser, Room };
+type CalendarEvent = {
+	id: string | null,
+	start: Date,
+	end: Date,
+	titleHTML: string,
+	color?: string,
+	extendedProps?: any
+	resourceIds?: string
+}
+
+export type { User, ADEUser, Room, CalendarEvent };
 export { PlanningOfDay };

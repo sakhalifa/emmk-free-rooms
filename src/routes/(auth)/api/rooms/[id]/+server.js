@@ -6,7 +6,6 @@ import { json } from '@sveltejs/kit';
  * @type {import('$lib/server/types.d').ParamType[]}
  */
 const roomParams = [
-	// @ts-ignore
 	{
 		name: 'start',
 		required: false,
@@ -15,7 +14,6 @@ const roomParams = [
 		_checkFunction: (d) => (d instanceof Date ? isValidDate(d) : false),
 		_parseFailMessage: "Not a valid ISO date! It's in format YYYY-MM-DD!"
 	},
-	// @ts-ignore
 	{
 		name: 'end',
 		required: false,

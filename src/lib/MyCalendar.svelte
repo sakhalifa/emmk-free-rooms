@@ -5,33 +5,14 @@
 
 <script>
 	let loading = false;
-	/** @type {(s: Date, e: Date) => string} */
-	export let getUrl;
-	/**
-	 *
-	 * @param {string | null} type
-	 */
-	function getColorFromType(type) {
-		switch (type) {
-			case 'CM':
-				return 'yellow';
-			case 'CI':
-				return 'lime';
-			case 'TD':
-				return 'cyan';
-			case 'SCOLARITE':
-			case 'ENSEIGNANTS':
-				return 'red';
-			case 'TP':
-				return 'lightgray';
-			default:
-				return '';
-		}
-	}
+
+	/** @type {(s: Date, e: Date) => Promise<import('$lib/types.d').CalendarEvent[]>}*/
+	export let fetcher;
+
 	/**
 	 *
 	 * @param {{start: Date, end: Date}} fetchInfo
-	 * @param {(_: any[]) => void} successCallback
+	 * @param {(_: import('$lib/types.d').CalendarEvent[]) => void} successCallback
 	 */
 	function fetchEvents(fetchInfo, successCallback) {
 		let { start, end } = fetchInfo;
@@ -39,53 +20,26 @@
 		start.setDate(start.getDate() + 1);
 		end = new Date(end);
 		loading = true;
-		fetch(getUrl(start, end))
-			.then((r) => r.json())
-			.then((d) => {
-				/** @type import('$lib/types.d').PlanningOfDay[]*/
-				const plannings = d;
-				const events = [];
-				for (const planning of plannings) {
-					for (const ev of planning.events) {
-						events.push({
-							id: ev.description.id,
-							start: new Date(ev.start),
-							end: new Date(ev.end),
-							titleHTML: `<span class="title-bold">${ev.summary}</span><br>${
-								ev.location?.replaceAll(',', '<br>') ?? ''
-							}`,
-							color: getColorFromType(ev.description.type),
-							extendedProps: {
-								type: ev.description.type
-							}
-						});
-					}
-				}
-				loading = false;
-				let el = document.querySelector('.ec-toolbar > *:nth-child(2)');
-				if (el !== null && el instanceof HTMLElement) {
-					const [hours, minutes] = plannings.reduce(
-						(prev, cur) => {
-							const [h, m] = prev;
-							const [dh, dm] = cur.events.reduce(
-								(p, c) => {
-									let [oldH, oldM] = p;
-									const dt = new Date(new Date(c.end).getTime() - new Date(c.start).getTime());
-									oldM += dt.getUTCMinutes();
-									oldH += dt.getUTCHours() + Math.floor(oldM / 60);
-									return [oldH, oldM % 60];
-								},
-								[0, 0]
-							);
-
-							return [h + dh + Math.floor(dm / 60), dm % 60];
-						},
-						[0, 0]
-					);
-					el.innerText = `${hours}h` + (minutes ? `${minutes}m` : "");
-				}
-				successCallback(events);
-			});
+		fetcher(start, end).then((events) => {
+			let el = document.querySelector('.ec-toolbar > *:nth-child(2)');
+			if (el !== null && el instanceof HTMLElement) {
+				const [hours, minutes] = events.reduce(
+					(prev, cur) => {
+						let [h, m] = prev;
+						const dt = new Date(new Date(cur.end).getTime() - new Date(cur.start).getTime());
+						const dm = dt.getUTCMinutes();
+						const dh = dt.getUTCHours();
+						m += dm;
+						h += dh + Math.floor(m / 60);
+						return [h, m % 60];
+					},
+					[0, 0]
+				);
+				el.innerText = `${hours}h` + (minutes ? `${minutes}m` : '');
+			}
+			loading = false;
+			successCallback(events);
+		});
 	}
 	/** @type {HTMLDivElement} */
 	let tooltipRef;
@@ -131,7 +85,9 @@
 	 */
 	function handleKeydown(ev) {
 		if (!loading) {
+			// @ts-ignore
 			if (ev.key === 'ArrowLeft') window.document.querySelector('.ec-button.ec-prev')?.click();
+			// @ts-ignore
 			if (ev.key === 'ArrowRight') window.document.querySelector('.ec-button.ec-next')?.click();
 			if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') removeTooltip({});
 		}
@@ -158,6 +114,7 @@
 			.slice(1)
 			.join('<br>')}`;
 		Object.assign(tooltipRef.style, activeTooltipStyle);
+		// @ts-ignore
 		tooltipRef.children[0].style.backgroundColor = info.event.backgroundColor
 			? info.event.backgroundColor
 			: '#039be5';
