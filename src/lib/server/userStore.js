@@ -50,6 +50,9 @@ async function getOrCreateUser(login) {
  * @param {Date} end
  */
 async function getPlanningForUser(user, start, end) {
+	if(end.getTime() - start.getTime() > 60 * 60 * 24 * 31){
+		throw new Error("Nope!");
+	}
 	/** @type {Promise<import("../types.d").PlanningOfDay>[]} */
 	const promises = [];
 
