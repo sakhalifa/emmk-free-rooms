@@ -49,8 +49,10 @@ export async function GET({ url, params, fetch, locals }) {
 	if (start === undefined) start = new Date();
 	if (end === undefined) end = new Date(start);
 	try {
-		return json(await getPlanningForUser(user, start, end));
+		const planning = await getPlanningForUser(user, start, end);
+		return json(planning);
 	} catch (e) {
+		console.error(e);
 		return json({status: "TOO SPACED DATES", error:`There is too big of a gap between start and end`})
 	}
 }

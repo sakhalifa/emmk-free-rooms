@@ -50,7 +50,9 @@ async function getOrCreateUser(login) {
  * @param {Date} end
  */
 async function getPlanningForUser(user, start, end) {
-	if(end.getTime() - start.getTime() > 60 * 60 * 24 * 31){
+	const gapInSeconds = (end.getTime() - start.getTime())/1000;
+	const MAX_GAP = 60 * 60 * 24 * 31;
+	if(gapInSeconds > MAX_GAP){
 		throw new Error("Nope!");
 	}
 	/** @type {Promise<import("../types.d").PlanningOfDay>[]} */
