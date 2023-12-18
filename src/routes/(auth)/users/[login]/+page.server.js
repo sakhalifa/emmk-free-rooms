@@ -18,11 +18,11 @@ const userParams = [
 	{
 		name: 'additionalUsers',
 		required: false,
-		type: 'Users[]',
+		type: 'string[]',
 		_parser: async (s) => {
 			let userLogins = s.split(',')
-			let promises = userLogins.map((v) => getOrCreateUser(v))
-			return await Promise.all(promises)
+			let uniqueUserLogins = new Set(userLogins).values();
+			return [...uniqueUserLogins]
 		},
 		// @ts-ignore
 		_checkFunction: checkUsers,
@@ -38,11 +38,16 @@ export async function load({ params, url }) {
 	if (user === null) throw error(400, 'Invalid login!');
 
 	/**
-	 * @type {{additionalUsers: import('$lib/types.d').User[] | undefined}}
+	 * @type {{additionalUsers: string[] | undefined}}
 	 */
 	let {additionalUsers} = value;
 	additionalUsers = additionalUsers ?? []
-	const users = [user, ...additionalUsers]
+	additionalUsers = additionalUsers.filter((u) => u !== user.login);
+	if(additionalUsers.length > 30){
+		throw error(400, "Too many users. 30 is the maximum")
+	}
+	let promises = additionalUsers.map((v) => getOrCreateUser(v))
+	const users = [user, ...(await Promise.all(promises))]
 	return {
 		users
 	};
