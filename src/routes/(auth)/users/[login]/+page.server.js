@@ -47,7 +47,11 @@ export async function load({ params, url }) {
 		throw error(400, "Too many users. 30 is the maximum")
 	}
 	let promises = additionalUsers.map((v) => getOrCreateUser(v))
-	const users = [user, ...(await Promise.all(promises))]
+	let res = await Promise.all(promises)
+	if(res.includes(null)){
+		throw error(400, "Failed to parse parameter \"additionalUsers\": \"Unknown login.\"")
+	}
+	const users = [user, ...res]
 	return {
 		users
 	};
