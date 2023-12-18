@@ -2,14 +2,6 @@ import { getOrCreateUser } from '$lib/server/userStore';
 import { checkError } from '$lib/server/utils';
 import { error } from '@sveltejs/kit';
 
-/**
- * 
- * @param {(import('$lib/types.d').User | null)[]} u 
- * @returns {boolean}
- */
-function checkUsers(u) {
-	return u.find((u) => u === null) === undefined;
-}
 
 /**
  * @type {import('$lib/server/types.d').ParamType[]}
@@ -22,10 +14,10 @@ const userParams = [
 		_parser: async (s) => {
 			let userLogins = s.split(',')
 			let uniqueUserLogins = new Set(userLogins).values();
-			return [...uniqueUserLogins]
+			return Array.from(uniqueUserLogins)
 		},
 		// @ts-ignore
-		_checkFunction: checkUsers,
+		_checkFunction: () => true,
 		_parseFailMessage: 'There is an invalid login!'
 	}
 ]
@@ -51,6 +43,8 @@ export async function load({ params, url }) {
 	if(res.includes(null)){
 		throw error(400, "Failed to parse parameter \"additionalUsers\": \"Unknown login.\"")
 	}
+	/** @type {import('$lib/types.d/index').User[]}*/
+	// @ts-ignore
 	const users = [user, ...res]
 	return {
 		users
