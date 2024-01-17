@@ -97,6 +97,19 @@ function getDaysArray(start, end) {
 }
 
 /**
+ *
+ * @param {Date} start
+ * @param {Date} end
+ */
+function checkGapLessOrThrow(start, end){
+	const gapInSeconds = (end.getTime() - start.getTime())/1000;
+	const MAX_GAP = 60 * 60 * 24 * 31;
+	if(gapInSeconds > MAX_GAP){
+		throw new Error("Nope!");
+	}
+}
+
+/**
  * A function that will check for errors in the url search parameters compared to a
  * params array. Will return [true, errors] if an error occured, else [false, parsed_parameters]
  * where `parsed_parameters` is a dictionary with {params.name: params._parse(params.value)}
@@ -173,5 +186,6 @@ export {
 	parseRegex,
 	getDaysArray,
 	dateRangeOverlaps,
-	isValidDate
+	isValidDate,
+	checkGapLessOrThrow
 };
